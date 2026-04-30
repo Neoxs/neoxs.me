@@ -1,0 +1,20 @@
+{
+    "name": "@repo/content",
+    "version": "0.0.1",
+    "private": true,
+    "exports": {
+      "./blog": "./src/blog.ts",
+      "./projects": "./src/projects.ts"
+    },
+    "scripts": {
+      "lint": "echo 'no lint'",
+      "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+      "gray-matter": "^4"
+    },
+    "devDependencies": {
+      "@repo/tsconfig": "workspace:*",
+      "typescript": "^5"
+    }
+  }

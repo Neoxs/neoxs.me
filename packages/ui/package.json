@@ -3,16 +3,28 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./*": "./src/*.tsx"
+    "./tokens": "./src/tokens/index.ts",
+    "./button": "./src/components/Button/index.tsx",
+    "./badge": "./src/components/Badge/index.tsx",
+    "./card": "./src/components/Card/index.tsx",
+    "./input": "./src/components/Input/index.tsx",
+    "./tag": "./src/components/Tag/index.tsx",
+    "./stat": "./src/components/Stat/index.tsx",
+    "./terminal": "./src/components/Terminal/index.tsx",
+    "./status": "./src/components/Status/index.tsx",
+    "./toast": "./src/components/Toast/index.tsx",
+    "./pipeline": "./src/components/Pipeline/index.tsx",
+    "./section-header": "./src/components/SectionHeader/index.tsx",
+    "./styles": "./src/styles/globals.css"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
     "generate:component": "turbo gen react-component",
-    "check-types": "tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
     "@types/node": "^22.15.3",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",

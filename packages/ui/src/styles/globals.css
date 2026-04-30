@@ -1,0 +1,75 @@
+/* ── Design tokens ── */
+:root {
+  --color-bg:          #0a0a0a;
+  --color-surface:     #111111;
+  --color-elevated:    #161616;
+  --color-border:      #1e1e1e;
+  --color-border-2:    #2a2a2a;
+
+  --color-teal:        #1D9E75;
+  --color-teal-hover:  #0f6e56;
+  --color-teal-dim:    #0a2018;
+  --color-teal-border: #0a3020;
+
+  --color-text:        #e8e8e8;
+  --color-text-2:      #888780;
+  --color-text-3:      #444441;
+
+  --color-red:         #f87171;
+  --color-red-bg:      #1c0a0a;
+  --color-red-border:  #7f1d1d;
+  --color-amber:       #fbbf24;
+  --color-amber-bg:    #1a0f00;
+  --color-amber-border:#78350f;
+
+  --font-mono:  'SF Mono', 'Fira Code', 'Fira Mono', monospace;
+  --font-serif: 'Georgia', serif;
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Utility classes ── */
+.font-serif { font-family: var(--font-serif); }
+.font-mono  { font-family: var(--font-mono); }
+
+.text-primary   { color: var(--color-text); }
+.text-secondary { color: var(--color-text-2); }
+.text-muted     { color: var(--color-text-3); }
+.text-teal      { color: var(--color-teal); }
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--color-teal);
+}
+
+/* Prose styles — applied to MDX output inside <Prose> */
+.prose h1,.prose h2,.prose h3{font-family:var(--font-serif);font-weight:400;color:var(--color-text);line-height:1.2}
+.prose h1{font-size:28px;margin:40px 0 16px}
+.prose h2{font-size:20px;margin:36px 0 12px}
+.prose h3{font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--color-text-2);letter-spacing:.5px;margin:28px 0 10px}
+.prose p{margin:0 0 18px}
+.prose a{color:var(--color-teal);text-decoration:none;border-bottom:0.5px solid var(--color-teal-border)}
+.prose a:hover{border-bottom-color:var(--color-teal)}
+.prose strong{color:var(--color-text);font-weight:500}
+.prose code{font-family:var(--font-mono);font-size:.9em;color:var(--color-teal);background:var(--color-surface);padding:2px 5px;border-radius:var(--radius-sm)}
+.prose pre{margin:20px 0}
+.prose blockquote{border-left:2px solid var(--color-teal);padding:8px 16px;background:var(--color-teal-dim);margin:20px 0}
+.prose blockquote p{color:var(--color-text-2);font-style:italic;margin:0}
+.prose hr{border:none;border-top:0.5px solid var(--color-border);margin:32px 0}
+.prose ul,.prose ol{padding-left:20px;margin:0 0 18px}
+.prose li{margin-bottom:6px}
+.prose img{width:100%;border:0.5px solid var(--color-border);border-radius:var(--radius-sm)}

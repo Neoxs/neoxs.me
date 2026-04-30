@@ -1,0 +1,24 @@
+{
+  "name": "mfe-blog",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev --port 3002",
+    "prepare": "nuxt prepare",
+    "build": "nuxt build",
+    "start": "node .output/server/index.mjs",
+    "lint": "eslint .",
+    "typecheck": "nuxt typecheck",
+    "clean": "rm -rf .output .nuxt"
+  },
+  "dependencies": {
+    "nuxt": "^3",
+    "@nuxt/content": "^2",
+    "@repo/ui": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/tsconfig": "workspace:*",
+    "@nuxt/devtools": "latest"
+  }
+}

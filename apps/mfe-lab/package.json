@@ -1,0 +1,27 @@
+{
+    "name": "mfe-lab",
+    "version": "0.0.1",
+    "private": true,
+    "type": "module",
+    "scripts": {
+      "dev": "vite --port 3003",
+      "build": "vite build",
+      "preview": "vite preview --port 3003",
+      "lint": "eslint src",
+      "typecheck": "tsc --noEmit",
+      "clean": "rm -rf dist"
+    },
+    "dependencies": {
+      "react": "^19",
+      "react-dom": "^19",
+      "@repo/ui": "workspace:*"
+    },
+    "devDependencies": {
+      "@repo/tsconfig": "workspace:*",
+      "@types/react": "^19",
+      "@types/react-dom": "^19",
+      "@vitejs/plugin-react": "^4",
+      "typescript": "^5",
+      "vite": "^5"
+    }
+  }

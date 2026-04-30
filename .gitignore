@@ -26,6 +26,11 @@ coverage
 out/
 build
 dist
+.output
+.nuxt
+.tanstack
+
+*.tsbuildinfo
 
 
 # Debug
