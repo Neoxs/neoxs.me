@@ -30,6 +30,8 @@ dist
 .nuxt
 .tanstack
 
+storybook-static/
+
 *.tsbuildinfo
 
 
