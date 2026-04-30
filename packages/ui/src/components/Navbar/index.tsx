@@ -7,19 +7,19 @@ export function Navbar({ links, cta = 'contact →', onCtaClick }: NavbarProps) 
       display:         'flex',
       justifyContent:  'space-between',
       alignItems:      'center',
-      padding:         '14px 40px',
+      padding:         'var(--space-14) var(--space-40)',
       background:      'var(--color-bg)',
       borderBottom:    '1px solid var(--color-teal)',
     }}>
-      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--color-teal)', fontWeight: 500 }}>
-        yacine.dev
+      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-13)', color: 'var(--color-teal)', fontWeight: 500 }}>
+       neoxs.me
       </span>
 
       <div style={{ display: 'flex', border: '0.5px solid var(--color-border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
         {links.map(link => (
           <a key={link.label} href={link.href} style={{
-            padding:       '6px 14px',
-            fontSize:      '10px',
+            padding:       'var(--space-6) var(--space-14)',
+            fontSize:      'var(--text-10)',
             fontFamily:    'var(--font-mono)',
             color:         link.active ? 'var(--color-teal)' : 'var(--color-text-3)',
             background:    link.active ? 'var(--color-teal-dim)' : 'none',
@@ -35,8 +35,8 @@ export function Navbar({ links, cta = 'contact →', onCtaClick }: NavbarProps) 
         border:       '0.5px solid var(--color-border-2)',
         color:        'var(--color-teal)',
         fontFamily:   'var(--font-mono)',
-        fontSize:     '10px',
-        padding:      '6px 14px',
+        fontSize:     'var(--text-10)',
+        padding:      'var(--space-6) var(--space-14)',
         borderRadius: 'var(--radius-sm)',
         cursor:       'pointer',
       }}>{cta}</button>

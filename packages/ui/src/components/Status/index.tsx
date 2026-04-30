@@ -17,8 +17,8 @@ export function Status({ name, state, detail }: StatusProps) {
     <div style={{
       display:      'flex',
       alignItems:   'center',
-      gap:          '8px',
-      padding:      '8px 12px',
+      gap:          'var(--space-8)',
+      padding:      'var(--space-8) var(--space-12)',
       background:   'var(--color-surface)',
       border:       '0.5px solid var(--color-border)',
       borderRadius: 'var(--radius-sm)',
@@ -30,11 +30,11 @@ export function Status({ name, state, detail }: StatusProps) {
         background:   dots[state],
         flexShrink:   0,
       }} />
-      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--color-text-2)' }}>
+      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-10)', color: 'var(--color-text-2)' }}>
         {name}
       </span>
       {detail && (
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--color-text-3)', marginLeft: 'auto' }}>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-9)', color: 'var(--color-text-3)', marginLeft: 'auto' }}>
           {detail}
         </span>
       )}

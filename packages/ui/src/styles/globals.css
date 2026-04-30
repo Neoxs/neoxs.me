@@ -28,6 +28,49 @@
   --radius-sm: 2px;
   --radius-md: 4px;
   --radius-lg: 8px;
+
+  /* Font sizes */
+  --text-7:  7px;
+  --text-8:  8px;
+  --text-9:  9px;
+  --text-10: 10px;
+  --text-11: 11px;
+  --text-12: 12px;
+  --text-13: 13px;
+  --text-14: 14px;
+  --text-15: 15px;
+  --text-16: 16px;
+  --text-18: 18px;
+  --text-20: 20px;
+  --text-22: 22px;
+  --text-24: 24px;
+  --text-28: 28px;
+  --text-32: 32px;
+
+  /* Spacing */
+  --space-1:  1px;
+  --space-2:  2px;
+  --space-3:  3px;
+  --space-4:  4px;
+  --space-5:  5px;
+  --space-6:  6px;
+  --space-7:  7px;
+  --space-8:  8px;
+  --space-9:  9px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-14: 14px;
+  --space-16: 16px;
+  --space-18: 18px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-28: 28px;
+  --space-32: 32px;
+  --space-36: 36px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-80: 80px;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -36,7 +79,7 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: var(--text-14);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -51,25 +94,25 @@ body {
 
 .label {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: var(--text-11);
   letter-spacing: 3px;
   color: var(--color-teal);
 }
 
 /* Prose styles — applied to MDX output inside <Prose> */
 .prose h1,.prose h2,.prose h3{font-family:var(--font-serif);font-weight:400;color:var(--color-text);line-height:1.2}
-.prose h1{font-size:28px;margin:40px 0 16px}
-.prose h2{font-size:20px;margin:36px 0 12px}
-.prose h3{font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--color-text-2);letter-spacing:.5px;margin:28px 0 10px}
-.prose p{margin:0 0 18px}
+.prose h1{font-size:var(--text-32);margin:var(--space-40) 0 var(--space-16)}
+.prose h2{font-size:var(--text-22);margin:var(--space-36) 0 var(--space-12)}
+.prose h3{font-family:var(--font-mono);font-size:var(--text-15);font-weight:500;color:var(--color-text-2);letter-spacing:.5px;margin:var(--space-28) 0 var(--space-10)}
+.prose p{margin:0 0 var(--space-18)}
 .prose a{color:var(--color-teal);text-decoration:none;border-bottom:0.5px solid var(--color-teal-border)}
 .prose a:hover{border-bottom-color:var(--color-teal)}
 .prose strong{color:var(--color-text);font-weight:500}
-.prose code{font-family:var(--font-mono);font-size:.9em;color:var(--color-teal);background:var(--color-surface);padding:2px 5px;border-radius:var(--radius-sm)}
-.prose pre{margin:20px 0}
-.prose blockquote{border-left:2px solid var(--color-teal);padding:8px 16px;background:var(--color-teal-dim);margin:20px 0}
+.prose code{font-family:var(--font-mono);font-size:.9em;color:var(--color-teal);background:var(--color-surface);padding:var(--space-2) var(--space-5);border-radius:var(--radius-sm)}
+.prose pre{margin:var(--space-20) 0}
+.prose blockquote{border-left:2px solid var(--color-teal);padding:var(--space-8) var(--space-16);background:var(--color-teal-dim);margin:var(--space-20) 0}
 .prose blockquote p{color:var(--color-text-2);font-style:italic;margin:0}
-.prose hr{border:none;border-top:0.5px solid var(--color-border);margin:32px 0}
-.prose ul,.prose ol{padding-left:20px;margin:0 0 18px}
-.prose li{margin-bottom:6px}
+.prose hr{border:none;border-top:0.5px solid var(--color-border);margin:var(--space-32) 0}
+.prose ul,.prose ol{padding-left:var(--space-20);margin:0 0 var(--space-18)}
+.prose li{margin-bottom:var(--space-6)}
 .prose img{width:100%;border:0.5px solid var(--color-border);border-radius:var(--radius-sm)}

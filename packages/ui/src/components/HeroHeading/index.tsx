@@ -10,14 +10,14 @@ export function HeroHeading({ eyebrow = '// FRONTEND ENGINEER · PARIS', line1, 
   return (
     <div>
       {eyebrow && (
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--color-teal)', letterSpacing: '3px', marginBottom: '20px' }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-9)', color: 'var(--color-teal)', letterSpacing: '3px', marginBottom: 'var(--space-20)' }}>
           {eyebrow}
         </div>
       )}
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 400, lineHeight: 1.06, color: 'var(--color-text)', marginBottom: '8px' }}>
+      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 400, lineHeight: 1.06, color: 'var(--color-text)', marginBottom: 'var(--space-8)' }}>
         {line1}
       </h1>
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 400, lineHeight: 1.06, marginBottom: '28px' }}>
+      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 400, lineHeight: 1.06, marginBottom: 'var(--space-28)' }}>
         {line2}{' '}
         <em style={{ color: 'var(--color-teal)', fontStyle: 'italic' }}>{accent}</em>
       </h1>

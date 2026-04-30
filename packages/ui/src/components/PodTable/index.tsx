@@ -22,9 +22,9 @@ export function PodTable({ pods }: { pods: Pod[] }) {
 
   return (
     <div style={{ border: '0.5px solid var(--color-border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: cols.join(' '), padding: '7px 14px', background: 'var(--color-elevated)', borderBottom: '0.5px solid var(--color-border)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: cols.join(' '), padding: 'var(--space-7) var(--space-14)', background: 'var(--color-elevated)', borderBottom: '0.5px solid var(--color-border)' }}>
         {headers.map(h => (
-          <span key={h} style={{ fontFamily: 'var(--font-mono)', fontSize: '7px', color: 'var(--color-text-3)', letterSpacing: '2px' }}>{h}</span>
+          <span key={h} style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-7)', color: 'var(--color-text-3)', letterSpacing: '2px' }}>{h}</span>
         ))}
       </div>
       {pods.map((pod, i) => {
@@ -34,19 +34,19 @@ export function PodTable({ pods }: { pods: Pod[] }) {
             display:         'grid',
             gridTemplateColumns: cols.join(' '),
             alignItems:      'center',
-            padding:         '9px 14px',
+            padding:         'var(--space-9) var(--space-14)',
             borderBottom:    i < pods.length - 1 ? '0.5px solid var(--color-border)' : 'none',
             background:      'var(--color-surface)',
             transition:      'background 0.1s',
           }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '1px', padding: '2px 7px', borderRadius: 'var(--radius-sm)', background: s.bg, border: `0.5px solid ${s.border}`, color: s.color, width: 'fit-content' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-5)', fontFamily: 'var(--font-mono)', fontSize: 'var(--text-8)', letterSpacing: '1px', padding: 'var(--space-2) var(--space-7)', borderRadius: 'var(--radius-sm)', background: s.bg, border: `0.5px solid ${s.border}`, color: s.color, width: 'fit-content' }}>
               <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: 'currentColor', flexShrink: 0 }} />
               {pod.status}
             </span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pod.name}</span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--color-text-3)' }}>{pod.version ?? '—'}</span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: pod.restarts > 0 ? 'var(--color-red)' : 'var(--color-text-3)' }}>{pod.restarts}</span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--color-text-3)' }}>{pod.age}</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-10)', color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{pod.name}</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-9)', color: 'var(--color-text-3)' }}>{pod.version ?? '—'}</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-9)', color: pod.restarts > 0 ? 'var(--color-red)' : 'var(--color-text-3)' }}>{pod.restarts}</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-9)', color: 'var(--color-text-3)' }}>{pod.age}</span>
           </div>
         )
       })}

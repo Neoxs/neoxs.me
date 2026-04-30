@@ -1,0 +1,51 @@
+@import '@repo/ui/styles';
+
+/* Shell-specific overrides */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-teal-dim);
+  color: var(--color-teal);
+}
+
+:focus-visible {
+  outline: 1px solid var(--color-teal);
+  outline-offset: 2px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-border-2); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-teal); }
+
+/* Layout containers */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+@media (max-width: 768px) {
+  .container { padding: 0 20px; }
+}
+
+/* Section spacing */
+.section {
+  padding: 80px 0;
+  border-top: 0.5px solid var(--color-border);
+}
+
+.section:first-of-type {
+  border-top: none;
+}

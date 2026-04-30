@@ -6,28 +6,28 @@ export function StatGrid({ items }: StatGridProps) {
     <div style={{
       display:             'grid',
       gridTemplateColumns: `repeat(${items.length}, 1fr)`,
-      gap:                 '1px',
+      gap:                 'var(--space-1)',
       background:          'var(--color-border)',
       border:              '0.5px solid var(--color-border)',
     }}>
       {items.map(item => (
         <div key={item.label} style={{
           background: 'var(--color-surface)',
-          padding:    '12px',
+          padding:    'var(--space-12)',
           textAlign:  'center',
         }}>
           <div style={{
             fontFamily:  'var(--font-mono)',
-            fontSize:    '20px',
+            fontSize:    'var(--text-20)',
             color:       'var(--color-teal)',
             fontWeight:  500,
           }}>{item.value}</div>
           <div style={{
             fontFamily:    'var(--font-mono)',
-            fontSize:      '8px',
+            fontSize:      'var(--text-8)',
             color:         'var(--color-text-3)',
             letterSpacing: '2px',
-            marginTop:     '3px',
+            marginTop:     'var(--space-3)',
           }}>{item.label}</div>
         </div>
       ))}

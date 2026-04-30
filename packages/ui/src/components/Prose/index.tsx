@@ -6,7 +6,7 @@ export function Prose({ children }: { children: ReactNode }) {
   return (
     <div style={{
       fontFamily: 'var(--font-mono)',
-      fontSize:   '13px',
+      fontSize:   'var(--text-13)',
       lineHeight: 1.85,
       color:      'var(--color-text-2)',
       maxWidth:   '680px',

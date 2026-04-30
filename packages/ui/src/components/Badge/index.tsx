@@ -20,11 +20,11 @@ export function Badge({ variant = 'teal', dot = false, children }: BadgeProps) {
     <span style={{
       display:       'inline-flex',
       alignItems:    'center',
-      gap:           dot ? '5px' : undefined,
+      gap:           dot ? 'var(--space-5)' : undefined,
       fontFamily:    'var(--font-mono)',
-      fontSize:      '9px',
+      fontSize:      'var(--text-9)',
       letterSpacing: '1.5px',
-      padding:       '3px 8px',
+      padding:       'var(--space-3) var(--space-8)',
       borderRadius:  'var(--radius-sm)',
       ...variants[variant],
     }}>

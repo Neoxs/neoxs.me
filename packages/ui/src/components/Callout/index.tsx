@@ -10,11 +10,11 @@ const calloutStyles: Record<CalloutVariant, { bg: string; border: string; labelC
 export function Callout({ variant = 'tip', children }: { variant?: CalloutVariant; children: React.ReactNode }) {
   const s = calloutStyles[variant]
   return (
-    <div style={{ background: s.bg, border: `0.5px solid ${s.border}`, borderRadius: 'var(--radius-sm)', padding: '10px 14px', margin: '16px 0' }}>
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: s.labelColor, letterSpacing: '2px', marginBottom: '5px' }}>
+    <div style={{ background: s.bg, border: `0.5px solid ${s.border}`, borderRadius: 'var(--radius-sm)', padding: 'var(--space-10) var(--space-14)', margin: 'var(--space-16) 0' }}>
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-8)', color: s.labelColor, letterSpacing: '2px', marginBottom: 'var(--space-5)' }}>
         {s.label}
       </div>
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--color-text-2)', lineHeight: 1.7 }}>
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-11)', color: 'var(--color-text-2)', lineHeight: 1.7 }}>
         {children}
       </div>
     </div>

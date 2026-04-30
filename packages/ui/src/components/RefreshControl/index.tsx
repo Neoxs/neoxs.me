@@ -18,13 +18,13 @@ export function RefreshControl({ interval = 30, onRefresh }: RefreshControlProps
   const remaining = interval - seconds
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 14px', background: 'var(--color-elevated)', border: '0.5px solid var(--color-border)', borderRadius: 'var(--radius-sm)' }}>
-      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--color-text-3)' }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'var(--space-8) var(--space-14)', background: 'var(--color-elevated)', border: '0.5px solid var(--color-border)', borderRadius: 'var(--radius-sm)' }}>
+      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-9)', color: 'var(--color-text-3)' }}>
         Next refresh in {remaining}s
       </span>
       <button
         onClick={() => { onRefresh(); setSeconds(0) }}
-        style={{ background: 'none', border: '0.5px solid var(--color-border-2)', color: 'var(--color-text-3)', fontFamily: 'var(--font-mono)', fontSize: '9px', padding: '4px 10px', borderRadius: 'var(--radius-sm)', cursor: 'pointer' }}
+        style={{ background: 'none', border: '0.5px solid var(--color-border-2)', color: 'var(--color-text-3)', fontFamily: 'var(--font-mono)', fontSize: 'var(--text-9)', padding: 'var(--space-4) var(--space-10)', borderRadius: 'var(--radius-sm)', cursor: 'pointer' }}
       >
         ↻ refresh
       </button>

@@ -10,16 +10,16 @@ export function Lighthouse({ perf, a11y, seo, bp }: LighthouseScore) {
 
   return (
     <div style={{ border: '0.5px solid var(--color-border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
-      <div style={{ background: 'var(--color-elevated)', padding: '6px 10px', borderBottom: '0.5px solid var(--color-border)' }}>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: 'var(--color-text-3)', letterSpacing: '2px' }}>LIGHTHOUSE</span>
+      <div style={{ background: 'var(--color-elevated)', padding: 'var(--space-6) var(--space-10)', borderBottom: '0.5px solid var(--color-border)' }}>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-8)', color: 'var(--color-text-3)', letterSpacing: '2px' }}>LIGHTHOUSE</span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'var(--color-border)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-1)', background: 'var(--color-border)' }}>
         {items.map(item => (
-          <div key={item.label} style={{ background: 'var(--color-surface)', padding: '12px', textAlign: 'center' }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '22px', color: 'var(--color-teal)', fontWeight: 500 }}>
+          <div key={item.label} style={{ background: 'var(--color-surface)', padding: 'var(--space-12)', textAlign: 'center' }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-22)', color: 'var(--color-teal)', fontWeight: 500 }}>
               {item.value}
             </div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '7px', color: 'var(--color-text-3)', letterSpacing: '1.5px', marginTop: '3px' }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-7)', color: 'var(--color-text-3)', letterSpacing: '1.5px', marginTop: 'var(--space-3)' }}>
               {item.label}
             </div>
           </div>

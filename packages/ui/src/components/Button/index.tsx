@@ -12,7 +12,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const base: React.CSSProperties = {
   display:        'inline-flex',
   alignItems:     'center',
-  gap:            '6px',
+  gap:            'var(--space-6)',
   fontFamily:     'var(--font-mono)',
   letterSpacing:  '0.5px',
   cursor:         'pointer',
@@ -29,9 +29,9 @@ const variants: Record<ButtonVariant, React.CSSProperties> = {
 }
 
 const sizes: Record<ButtonSize, React.CSSProperties> = {
-  sm: { padding: '4px 10px',  fontSize: '10px' },
-  md: { padding: '8px 16px',  fontSize: '11px' },
-  lg: { padding: '12px 24px', fontSize: '12px' },
+  sm: { padding: 'var(--space-4) var(--space-10)',  fontSize: 'var(--text-10)' },
+  md: { padding: 'var(--space-8) var(--space-16)',  fontSize: 'var(--text-11)' },
+  lg: { padding: 'var(--space-12) var(--space-24)', fontSize: 'var(--text-12)' },
 }
 
 export function Button({

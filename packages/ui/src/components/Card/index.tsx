@@ -16,35 +16,35 @@ export function Card({ featured, meta, title, subtitle, tags, children, style, .
       border:       featured ? '2px solid var(--color-teal)' : '0.5px solid var(--color-border)',
       borderLeft:   featured ? '2px solid var(--color-teal)' : undefined,
       borderRadius: featured ? '0' : 'var(--radius-sm)',
-      padding:      '16px',
+      padding:      'var(--space-16)',
       transition:   'border-color 0.15s',
       ...style,
     }} {...props}>
       {meta && (
         <div style={{
           fontFamily:    'var(--font-mono)',
-          fontSize:      '8px',
+          fontSize:      'var(--text-8)',
           color:         'var(--color-teal)',
           letterSpacing: '2px',
-          marginBottom:  '8px',
+          marginBottom:  'var(--space-8)',
         }}>{meta}</div>
       )}
       {title && (
         <div style={{
           fontFamily:  'var(--font-serif)',
-          fontSize:    '16px',
+          fontSize:    'var(--text-16)',
           color:       'var(--color-text)',
           fontWeight:  400,
-          marginBottom: subtitle ? '4px' : '0',
+          marginBottom: subtitle ? 'var(--space-4)' : '0',
         }}>{title}</div>
       )}
       {subtitle && (
         <div style={{
           fontFamily:  'var(--font-mono)',
-          fontSize:    '10px',
+          fontSize:    'var(--text-10)',
           color:       'var(--color-text-3)',
           lineHeight:  1.6,
-          marginBottom: tags ? '12px' : '0',
+          marginBottom: tags ? 'var(--space-12)' : '0',
         }}>{subtitle}</div>
       )}
       {tags}

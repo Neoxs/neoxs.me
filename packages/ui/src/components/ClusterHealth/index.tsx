@@ -5,13 +5,13 @@ export function ClusterHealth({ total, healthy }: ClusterHealthProps) {
 
   return (
     <div style={{ border: '0.5px solid var(--color-border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 14px', background: 'var(--color-elevated)', borderBottom: '0.5px solid var(--color-border)' }}>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: 'var(--color-text-3)', letterSpacing: '2px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-8) var(--space-14)', background: 'var(--color-elevated)', borderBottom: '0.5px solid var(--color-border)' }}>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-8)', color: 'var(--color-text-3)', letterSpacing: '2px' }}>
           KUBERNETES CLUSTER
         </span>
         <span style={{
-          display: 'inline-flex', alignItems: 'center', gap: '5px',
-          fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '1.5px', padding: '2px 8px', borderRadius: 'var(--radius-sm)',
+          display: 'inline-flex', alignItems: 'center', gap: 'var(--space-5)',
+          fontFamily: 'var(--font-mono)', fontSize: 'var(--text-8)', letterSpacing: '1.5px', padding: 'var(--space-2) var(--space-8)', borderRadius: 'var(--radius-sm)',
           background: allGood ? 'var(--color-teal-dim)' : 'var(--color-amber-bg)',
           color:      allGood ? 'var(--color-teal)'     : 'var(--color-amber)',
           border:     allGood ? '0.5px solid var(--color-teal-border)' : '0.5px solid var(--color-amber-border)',
@@ -20,7 +20,7 @@ export function ClusterHealth({ total, healthy }: ClusterHealthProps) {
           {healthy}/{total} HEALTHY
         </span>
       </div>
-      <div style={{ display: 'flex', gap: '2px', padding: '10px 14px', background: 'var(--color-surface)' }}>
+      <div style={{ display: 'flex', gap: 'var(--space-2)', padding: 'var(--space-10) var(--space-14)', background: 'var(--color-surface)' }}>
         {Array.from({ length: total }).map((_, i) => (
           <div key={i} style={{
             flex: 1, height: '4px', borderRadius: '1px',

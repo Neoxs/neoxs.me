@@ -7,20 +7,20 @@ export function SkillsGrid({ categories }: SkillsGridProps) {
     <div style={{
       display:             'grid',
       gridTemplateColumns: `repeat(${categories.length}, 1fr)`,
-      gap:                 '1px',
+      gap:                 'var(--space-1)',
       background:          'var(--color-border)',
       border:              '0.5px solid var(--color-border)',
       borderRadius:        'var(--radius-sm)',
       overflow:            'hidden',
     }}>
       {categories.map(cat => (
-        <div key={cat.label} style={{ background: 'var(--color-surface)', padding: '18px' }}>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '7px', color: 'var(--color-teal)', letterSpacing: '2px', marginBottom: '14px' }}>
+        <div key={cat.label} style={{ background: 'var(--color-surface)', padding: 'var(--space-18)' }}>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-7)', color: 'var(--color-teal)', letterSpacing: '2px', marginBottom: 'var(--space-14)' }}>
             {cat.label}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
             {cat.skills.map(skill => (
-              <span key={skill} style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--color-text-3)' }}>
+              <span key={skill} style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-11)', color: 'var(--color-text-3)' }}>
                 {skill}
               </span>
             ))}

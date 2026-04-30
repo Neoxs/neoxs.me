@@ -21,18 +21,18 @@ export function ConsoleOutput({ lines, onClear }: ConsoleOutputProps) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: 'var(--color-elevated)', border: '0.5px solid var(--color-border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 12px', background: 'var(--color-surface)', borderBottom: '0.5px solid var(--color-border)', flexShrink: 0 }}>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', color: 'var(--color-text-3)', letterSpacing: '2px' }}>CONSOLE</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-6) var(--space-12)', background: 'var(--color-surface)', borderBottom: '0.5px solid var(--color-border)', flexShrink: 0 }}>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-8)', color: 'var(--color-text-3)', letterSpacing: '2px' }}>CONSOLE</span>
         {onClear && (
-          <button onClick={onClear} style={{ background: 'none', border: '0.5px solid var(--color-border-2)', color: 'var(--color-text-3)', fontFamily: 'var(--font-mono)', fontSize: '8px', padding: '2px 8px', borderRadius: 'var(--radius-sm)', cursor: 'pointer' }}>
+          <button onClick={onClear} style={{ background: 'none', border: '0.5px solid var(--color-border-2)', color: 'var(--color-text-3)', fontFamily: 'var(--font-mono)', fontSize: 'var(--text-8)', padding: 'var(--space-2) var(--space-8)', borderRadius: 'var(--radius-sm)', cursor: 'pointer' }}>
             clear
           </button>
         )}
       </div>
-      <div style={{ flex: 1, overflowY: 'auto', padding: '8px 12px' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: 'var(--space-8) var(--space-12)' }}>
         {lines.map((line, i) => (
-          <div key={i} style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', lineHeight: 2.1, color: levelColors[line.level] }}>
-            {line.timestamp && <span style={{ color: 'var(--color-text-3)', marginRight: '8px' }}>{line.timestamp}</span>}
+          <div key={i} style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-10)', lineHeight: 2.1, color: levelColors[line.level] }}>
+            {line.timestamp && <span style={{ color: 'var(--color-text-3)', marginRight: 'var(--space-8)' }}>{line.timestamp}</span>}
             &gt; {line.message}
           </div>
         ))}
