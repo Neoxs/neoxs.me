@@ -61,7 +61,9 @@ onMounted(async () => {
     </ClientOnly>
   </div>
 
-  <!-- Standard code block -->
+  <!-- Standard code block.
+       Nuxt Content passes <code>…</code> as the slot — we own the <pre> wrapper
+       so white-space, padding, and overflow are fully under our control. -->
   <div v-else class="prose-pre">
     <div class="pre-header">
       <span class="lang-badge">{{ language ?? 'code' }}</span>
@@ -70,12 +72,12 @@ onMounted(async () => {
         {{ copied ? 'copied!' : 'copy' }}
       </button>
     </div>
-    <slot />
+    <pre class="code-body"><slot /></pre>
   </div>
 </template>
 
 <style scoped>
-/* ── Code block ─────────────────────────────────── */
+/* ── Code block wrapper ──────────────────────────── */
 .prose-pre {
   margin: var(--space-20) 0;
   border: 0.5px solid var(--color-border);
@@ -84,6 +86,7 @@ onMounted(async () => {
   overflow: hidden;
 }
 
+/* ── Header bar ──────────────────────────────────── */
 .pre-header {
   display: flex;
   align-items: center;
@@ -125,24 +128,39 @@ onMounted(async () => {
   border-color: var(--color-teal-border);
 }
 
-/* Shiki wraps in <pre><code> — reset so we control the padding */
-.prose-pre :deep(pre) {
+/* ── Code body ───────────────────────────────────── */
+.code-body {
   margin: 0;
   padding: var(--space-16);
   overflow-x: auto;
-  background: transparent !important;
+  background: transparent;
   font-family: var(--font-mono);
   font-size: var(--text-12);
   line-height: 1.7;
+  /* Preserve newlines inside token text nodes */
+  white-space: pre;
 }
 
-.prose-pre :deep(code) {
-  font-family: var(--font-mono);
-  font-size: var(--text-12);
+/* <code> comes from the slot — reset globals.css .prose code overrides */
+.code-body :deep(code) {
+  font-family: inherit;
+  font-size: inherit;
   background: transparent !important;
   padding: 0 !important;
   color: inherit !important;
   border-radius: 0 !important;
+}
+
+/* Each Shiki .line span must be block so lines stack vertically */
+.code-body :deep(.line) {
+  display: block;
+  min-height: 1rem;
+}
+
+/* Shiki CSS-variable mode: each token span carries --shiki-default
+   instead of a direct color value. Wire it to color here. */
+.code-body :deep(span) {
+  color: var(--shiki-default, inherit) !important;
 }
 
 /* ── Mermaid diagram ─────────────────────────────── */

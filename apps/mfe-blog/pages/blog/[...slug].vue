@@ -37,11 +37,20 @@ const readingTime = computed(() =>
   post.value?.readingTime ?? estimateReadingTime(post.value)
 )
 
+function formatDate(dateStr: string): string {
+  if (!dateStr) return ''
+  const [year, month, day] = dateStr.split('-').map(Number)
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC',
+  }).format(new Date(Date.UTC(year, month - 1, day)))
+}
+
 const activeHeading = ref('')
+let headingObserver: IntersectionObserver | null = null
 
 onMounted(() => {
   nextTick(() => {
-    const observer = new IntersectionObserver(
+    headingObserver = new IntersectionObserver(
       entries => {
         for (const entry of entries) {
           if (entry.isIntersecting) activeHeading.value = entry.target.id
@@ -49,16 +58,19 @@ onMounted(() => {
       },
       { rootMargin: '-10% 0% -80% 0%' }
     )
-    document.querySelectorAll('h2, h3').forEach(el => observer.observe(el))
-    onUnmounted(() => observer.disconnect())
+    document.querySelectorAll('h2, h3').forEach(el => headingObserver!.observe(el))
   })
 })
+
+onUnmounted(() => headingObserver?.disconnect())
 
 useSeoMeta({
   title: () => `${post.value?.title} — neoxs.me`,
   ogTitle: () => post.value?.title,
   description: () => post.value?.description,
   ogType: 'article',
+  articlePublishedTime: () => post.value?.date ? new Date(post.value.date).toISOString() : undefined,
+  articleAuthor: () => ['Yacine Kharoubi'],
 })
 </script>
 
@@ -71,16 +83,18 @@ useSeoMeta({
     <div class="article-layout">
       <!-- Article -->
       <article class="article-content">
+        <NuxtLink to="/blog" class="top-back-link">← back to blog</NuxtLink>
+
         <header class="post-header">
           <div class="eyebrow">BLOG · {{ readingTime }} MIN READ</div>
           <h1 class="post-title">{{ post.title }}</h1>
           <p class="post-desc">{{ post.description }}</p>
 
           <div class="post-meta">
-            <div class="avatar">Y</div>
+            <div class="avatar" aria-hidden="true">Y</div>
             <span class="author">Yacine</span>
-            <span class="sep">·</span>
-            <time class="date">{{ post.date }}</time>
+            <span class="sep" aria-hidden="true">·</span>
+            <time class="date" :datetime="post.date">{{ formatDate(post.date) }}</time>
           </div>
 
           <div v-if="post.tags?.length" class="post-tags">
@@ -98,7 +112,7 @@ useSeoMeta({
       </article>
 
       <!-- TOC sidebar -->
-      <aside v-if="tocLinks.length > 0" class="toc-sidebar">
+      <aside v-if="tocLinks.length > 0" class="toc-sidebar" aria-label="Table of contents">
         <div class="toc-label">ON THIS PAGE</div>
         <nav class="toc-nav">
           <a
@@ -120,11 +134,12 @@ useSeoMeta({
 .article-layout {
   max-width: 1100px;
   margin: 0 auto;
-  padding: var(--space-64) var(--space-24);
+  padding: var(--space-80) var(--space-40);
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-48);
   align-items: start;
+  border-top: 0.5px solid var(--color-border);
 }
 
 @media (min-width: 900px) {
@@ -133,9 +148,33 @@ useSeoMeta({
   }
 }
 
+@media (max-width: 768px) {
+  .article-layout {
+    padding: var(--space-48) var(--space-20);
+  }
+}
+
 .article-content {
   min-width: 0;
   max-width: 720px;
+}
+
+/* ── Top back link ───────────────────────────────── */
+.top-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6);
+  font-family: var(--font-mono);
+  font-size: var(--text-11);
+  color: var(--color-text-2);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--space-40);
+  transition: color 0.15s;
+}
+
+.top-back-link:hover {
+  color: var(--color-teal);
 }
 
 /* ── Post header ─────────────────────────────────── */
@@ -157,13 +196,14 @@ useSeoMeta({
   font-weight: 400;
   color: var(--color-text);
   line-height: 1.15;
+  letter-spacing: -0.01em;
   margin-bottom: var(--space-16);
 }
 
 .post-desc {
   font-family: var(--font-mono);
   font-size: var(--text-12);
-  color: var(--color-text-3);
+  color: var(--color-text-2);
   line-height: 1.7;
   max-width: 560px;
   margin-bottom: var(--space-24);
@@ -275,10 +315,14 @@ useSeoMeta({
 }
 
 .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6);
   font-family: var(--font-mono);
   font-size: var(--text-11);
   color: var(--color-text-3);
   text-decoration: none;
+  letter-spacing: 0.04em;
   transition: color 0.15s;
 }
 

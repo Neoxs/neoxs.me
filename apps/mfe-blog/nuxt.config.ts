@@ -1,8 +1,18 @@
 export default defineNuxtConfig({
   modules: ['@nuxt/content'],
-  css: ['@repo/ui/styles'],
-  devtools: { enabled: true },
+  css: ['@repo/ui/styles', '~/assets/global.css'],
+devtools: { enabled: true },
   devServer: { port: 3002 },
+  vite: {
+    server: {
+      hmr: {
+        protocol: 'ws',
+        host: 'localhost',
+        port: 3002,
+        clientPort: 3002,
+      },
+    },
+  },
   nitro: {
     preset: 'node-server',
   },
@@ -12,7 +22,7 @@ export default defineNuxtConfig({
   content: {
     highlight: {
       theme: 'github-dark',
-      langs: ['ts', 'tsx', 'vue', 'bash', 'yaml', 'go', 'java', 'json', 'css'],
+      langs: ['ts', 'js', 'tsx', 'vue', 'bash', 'yaml', 'go', 'java', 'json', 'css'],
     },
     markdown: {
       toc: {
