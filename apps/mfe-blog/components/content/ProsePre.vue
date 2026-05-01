@@ -61,9 +61,8 @@ onMounted(async () => {
     </ClientOnly>
   </div>
 
-  <!-- Standard code block.
-       Nuxt Content passes <code>…</code> as the slot — we own the <pre> wrapper
-       so white-space, padding, and overflow are fully under our control. -->
+  <!-- Standard code block -->
+  <!-- Slot receives <code>…</code> from Nuxt Content; we own the <pre> wrapper. -->
   <div v-else class="prose-pre">
     <div class="pre-header">
       <span class="lang-badge">{{ language ?? 'code' }}</span>
@@ -77,7 +76,7 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-/* ── Code block wrapper ──────────────────────────── */
+/* ── Code block ─────────────────────────────────── */
 .prose-pre {
   margin: var(--space-20) 0;
   border: 0.5px solid var(--color-border);
@@ -86,7 +85,6 @@ onMounted(async () => {
   overflow: hidden;
 }
 
-/* ── Header bar ──────────────────────────────────── */
 .pre-header {
   display: flex;
   align-items: center;
@@ -128,7 +126,7 @@ onMounted(async () => {
   border-color: var(--color-teal-border);
 }
 
-/* ── Code body ───────────────────────────────────── */
+/* ── Code body — we own this <pre>, slot gives us <code> ── */
 .code-body {
   margin: 0;
   padding: var(--space-16);
@@ -137,11 +135,9 @@ onMounted(async () => {
   font-family: var(--font-mono);
   font-size: var(--text-12);
   line-height: 1.7;
-  /* Preserve newlines inside token text nodes */
   white-space: pre;
 }
 
-/* <code> comes from the slot — reset globals.css .prose code overrides */
 .code-body :deep(code) {
   font-family: inherit;
   font-size: inherit;
@@ -151,15 +147,14 @@ onMounted(async () => {
   border-radius: 0 !important;
 }
 
-/* Each Shiki .line span must be block so lines stack vertically */
+/* Each Shiki line span must be block so lines stack vertically */
 .code-body :deep(.line) {
   display: block;
   min-height: 1rem;
 }
 
-/* Shiki CSS-variable mode: each token span carries --shiki-default
-   instead of a direct color value. Wire it to color here. */
-.code-body :deep(span) {
+/* Shiki uses CSS custom properties (--shiki-default) instead of direct colors */
+.code-body :deep(.line span) {
   color: var(--shiki-default, inherit) !important;
 }
 

@@ -92,12 +92,12 @@ body {
 .text-muted     { color: var(--color-text-3); }
 .text-teal      { color: var(--color-teal); }
 
-.label {
+/* .label {
   font-family: var(--font-mono);
   font-size: var(--text-11);
   letter-spacing: 3px;
   color: var(--color-teal);
-}
+} */
 
 /* Prose styles — applied to MDX output inside <Prose> */
 .prose h1,.prose h2,.prose h3{font-family:var(--font-serif);font-weight:400;color:var(--color-text);line-height:1.2}
@@ -116,6 +116,12 @@ body {
 .prose ul,.prose ol{padding-left:var(--space-20);margin:0 0 var(--space-18)}
 .prose li{margin-bottom:var(--space-6);line-height:1.75;font-size:var(--text-15)}
 .prose img{width:100%;border:0.5px solid var(--color-border);border-radius:var(--radius-sm)}
+
+/* Prevent prose styles leaking into Mermaid */
+.prose .mermaid-wrapper p {
+  margin: 0;
+  font-size: inherit;
+}
 
 @keyframes dot-ping {
   0%   { transform: scale(1);   opacity: 0.6; }
