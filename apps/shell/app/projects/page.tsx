@@ -1,9 +1,7 @@
-import { getAllProjects } from '@repo/content/projects'
-import { SectionHeader }  from '@repo/ui/section-header'
-import { Badge }          from '@repo/ui/badge'
-import { Tag }            from '@repo/ui/tag'
-import Link               from 'next/link'
-import type { Metadata }  from 'next'
+import { getAllProjects }  from '@repo/content/projects'
+import { ProjectList }     from './_components/ProjectList'
+import Link                from 'next/link'
+import type { Metadata }   from 'next'
 
 export const dynamic = 'force-static'
 
@@ -16,42 +14,42 @@ export default function ProjectsPage() {
   const projects = getAllProjects()
 
   return (
-    <main>
-      <section className="section" style={{ borderTop: 'none', paddingTop: '56px' }}>
+    <main style={{ minHeight: 'calc(100dvh - 52px)', display: 'flex', flexDirection: 'column' }}>
+      <section style={{ flex: 1, padding: 'var(--space-48) 0 var(--space-80)' }}>
         <div className="container">
-          <SectionHeader label="// ALL WORK" title="Projects" meta={`${projects.length} total`} />
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-            {projects.map((project, i) => (
-              <Link key={project.slug} href={`/projects/${project.slug}`} style={{ textDecoration: 'none' }}>
-                <article style={{
-                  display:        'grid',
-                  gridTemplateColumns: '1fr auto',
-                  gap:            '24px',
-                  alignItems:     'center',
-                  padding:        '20px 0',
-                  borderBottom:   i < projects.length - 1 ? '0.5px solid var(--color-border)' : 'none',
-                  transition:     'opacity 0.15s',
-                }}>
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '5px' }}>
-                      <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '18px', color: 'var(--color-text)', fontWeight: 400 }}>
-                        {project.title}
-                      </h2>
-                      {project.featured && <Badge variant="teal">FEATURED</Badge>}
-                    </div>
-                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--color-text-3)', lineHeight: 1.65, maxWidth: '520px', marginBottom: '10px' }}>
-                      {project.description}
-                    </p>
-                    <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
-                      {project.tags.map(tag => <Tag key={tag}>{tag}</Tag>)}
-                    </div>
-                  </div>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '16px', color: 'var(--color-text-3)', flexShrink: 0 }}>→</span>
-                </article>
-              </Link>
-            ))}
+          {/* Back link */}
+          <Link href="/" style={{
+            display:       'inline-flex',
+            alignItems:    'center',
+            gap:           'var(--space-6)',
+            fontFamily:    'var(--font-mono)',
+            fontSize:      'var(--text-11)',
+            color:         'var(--color-text-2)',
+            textDecoration:'none',
+            marginBottom:  'var(--space-40)',
+            letterSpacing: '0.04em',
+          }}>
+            ← home
+          </Link>
+
+          {/* Header */}
+          <div style={{ marginBottom: 'var(--space-32)' }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-9)', color: 'var(--color-teal)', letterSpacing: '3px', marginBottom: 'var(--space-6)' }}>
+              // ALL WORK
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+              <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-32)', color: 'var(--color-text)', fontWeight: 400 }}>
+                Projects
+              </h1>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-9)', color: 'var(--color-text-3)' }}>
+                {projects.length} total
+              </span>
+            </div>
           </div>
+
+          <ProjectList projects={projects} />
+
         </div>
       </section>
     </main>
