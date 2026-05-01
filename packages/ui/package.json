@@ -16,6 +16,7 @@
     "./hero-heading": "./src/components/HeroHeading/index.tsx",
     "./input": "./src/components/Input/index.tsx",
     "./lighthouse": "./src/components/Lighthouse/index.tsx",
+    "./live-terminal": "./src/components/LiveTerminal/index.tsx",
     "./log-viewer": "./src/components/LogViewer/index.tsx",
     "./navbar": "./src/components/Navbar/index.tsx",
     "./pipeline": "./src/components/Pipeline/index.tsx",
