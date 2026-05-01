@@ -3,7 +3,15 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "build:shell": "turbo run build --filter=shell",
+    "build:blog": "turbo run build --filter=mfe-blog",
+    "build:lab": "turbo run build --filter=mfe-lab",
+    "build:infra": "turbo run build --filter=mfe-infra",
     "dev": "turbo run dev",
+    "dev:shell": "turbo run dev --filter=shell",
+    "dev:blog": "turbo run dev --filter=mfe-blog",
+    "dev:lab": "turbo run dev --filter=mfe-lab",
+    "dev:infra": "turbo run dev --filter=mfe-infra",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
