@@ -15,7 +15,8 @@
   "dependencies": {
     "nuxt": "^3",
     "@nuxt/content": "^2",
-    "@repo/ui": "workspace:*"
+    "@repo/ui": "workspace:*",
+    "mermaid": "^11"
   },
   "devDependencies": {
     "@repo/tsconfig": "workspace:*",
