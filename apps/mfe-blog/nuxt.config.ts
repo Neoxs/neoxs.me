@@ -8,9 +8,6 @@ export default defineNuxtConfig({
   routeRules: {
     '/blog/**': { prerender: true },
   },
-  app: {
-    baseURL: '/blog',
-  },
   content: {
     highlight: {
       theme: 'github-dark',

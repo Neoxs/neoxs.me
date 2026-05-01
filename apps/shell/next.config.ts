@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
         destination: `${process.env.MFE_BLOG_URL ?? 'http://localhost:3002'}/blog/:path*`,
       },
       {
+        source: '/_nuxt/:path*',
+        destination: `${process.env.MFE_BLOG_URL ?? 'http://localhost:3002'}/_nuxt/:path*`,
+      },
+      {
         source: '/lab',
         destination: `${process.env.MFE_LAB_URL ?? 'http://localhost:3003'}/lab/`,
       },

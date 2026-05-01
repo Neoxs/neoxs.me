@@ -3,7 +3,7 @@ const route = useRoute()
 
 const { data: post } = await useAsyncData(
   route.path,
-  () => queryContent('/blog' + route.path).findOne()
+  () => queryContent(route.path).findOne()
 )
 
 if (!post.value) {

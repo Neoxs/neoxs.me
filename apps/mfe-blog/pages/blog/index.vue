@@ -14,7 +14,7 @@ useSeoMeta({
   <main>
     <h1>Blog</h1>
     <article v-for="post in posts" :key="post._path">
-      <NuxtLink :to="(post._path ?? '').replace(/^\/blog/, '')"  >
+      <NuxtLink :to="post._path">
         <h2>{{ post.title }}</h2>
       </NuxtLink>
       <p>{{ post.description }}</p>
