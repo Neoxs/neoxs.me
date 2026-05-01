@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import { ShellNavbar } from './_components/ShellNavbar'
+import { ShellNavbar }  from './_components/ShellNavbar'
+import { ShellFooter }  from './_components/ShellFooter'
 
 export const metadata: Metadata = {
   title: {
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ShellNavbar />
         {children}
+        <ShellFooter />
       </body>
     </html>
   )
