@@ -1,0 +1,14 @@
+**/node_modules
+**/.next
+**/dist
+**/.output
+**/.nuxt
+**/.tanstack
+**/.turbo
+.git
+**/*.log
+**/npm-debug.log*
+**/coverage
+**/storybook-static
+**/tsconfig.tsbuildinfo
+**/.DS_Store

@@ -1,0 +1,104 @@
+name: neoxs-me
+
+services:
+  # ── Front-door nginx ──────────────────────────────────────────────────────
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - mfe-net
+    depends_on:
+      shell:
+        condition: service_healthy
+      mfe-blog:
+        condition: service_healthy
+      mfe-lab:
+        condition: service_healthy
+      mfe-infra:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ── Shell (Next.js standalone) ────────────────────────────────────────────
+  shell:
+    build:
+      context: .
+      dockerfile: apps/shell/Dockerfile
+    networks:
+      - mfe-net
+    environment:
+      NODE_ENV: production
+      # Used by shell's Next.js rewrites for server-side MFE fetch calls
+      MFE_BLOG_URL: "http://mfe-blog:3002"
+      MFE_LAB_URL: "http://mfe-lab:3003"
+      MFE_INFRA_URL: "http://mfe-infra:3004"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # ── Blog MFE (Nuxt/Nitro) ─────────────────────────────────────────────────
+  mfe-blog:
+    build:
+      context: .
+      dockerfile: apps/mfe-blog/Dockerfile
+    networks:
+      - mfe-net
+    environment:
+      NODE_ENV: production
+      HOST: "0.0.0.0"
+      PORT: "3002"
+      NITRO_HOST: "0.0.0.0"
+      NITRO_PORT: "3002"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "--spider", "http://127.0.0.1:3002/blog"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ── Lab MFE (Vite SPA + nginx) ────────────────────────────────────────────
+  mfe-lab:
+    build:
+      context: .
+      dockerfile: apps/mfe-lab/Dockerfile
+    networks:
+      - mfe-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3003/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  # ── Infra MFE (Vite SPA + nginx) ─────────────────────────────────────────
+  mfe-infra:
+    build:
+      context: .
+      dockerfile: apps/mfe-infra/Dockerfile
+    networks:
+      - mfe-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3004/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+networks:
+  mfe-net:
+    driver: bridge

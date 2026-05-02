@@ -1,7 +1,9 @@
 import type { NextConfig } from 'next'
+import path from 'path'
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  outputFileTracingRoot: path.join(__dirname, '../../'),
   reactCompiler: true,
   transpilePackages: ['@repo/ui'],
   async rewrites() {
