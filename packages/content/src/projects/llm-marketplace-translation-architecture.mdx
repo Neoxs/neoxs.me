@@ -1,0 +1,77 @@
+---
+title: "Real-Time LLM Translation System for Marketplace Internationalization"
+description: "Contributed to the implementation of a real-time translation system using OpenAI and Tolgee for marketplace internationalization, including Redis caching, monitoring, and frontend integration inside a large monorepo environment."
+tags: ["LLM", "OpenAI API", "Tolgee", "Redis", "Next.js", "TypeScript", "Grafana", "Prometheus", "Node.js", "Monorepo"]
+featured: true
+github: "https://github.com/neoxs/reponame"
+---
+
+# Overview
+
+At Rakuten France, I worked on a real-time translation system designed to support marketplace internationalization efforts.
+
+The project integrated OpenAI and Tolgee into the existing platform to dynamically translate marketplace content at runtime across multiple Next.js applications inside a shared monorepo environment.
+
+My work focused mainly on frontend integration, caching, runtime configuration, monitoring, and improving the reliability and performance of the translation flow in production.
+
+# What I Worked On
+
+- Contributed to the integration of OpenAI API and Tolgee into the marketplace translation workflow
+- Developed a custom Redis-based cache layer to reduce repeated LLM requests
+- Added configurable cache settings through a shared config-service
+- Worked on marketplace-specific locale detection and translation providers
+- Integrated monitoring dashboards with Grafana and Prometheus
+- Collaborated with backend and platform teams on production rollout and debugging
+
+# Technical Details
+
+The system relied on several technologies working together:
+
+- **OpenAI API** for dynamic translation generation
+- **Tolgee** for localization management
+- **Redis** for translation response caching
+- **Next.js + TypeScript** applications inside a monorepo
+- **Grafana / Prometheus** for observability and monitoring
+
+I also worked on configuration and feature-flag related logic to allow translation behavior to be adjusted without modifying application code directly.
+
+# Performance Improvements
+
+One of the main challenges was reducing latency and API costs caused by repeated translation requests.
+
+To improve this, I implemented a Redis caching layer with:
+- TTL-based expiration
+- configurable cache limits
+- environment-driven configuration
+- cache hit/miss tracking
+
+This significantly reduced duplicate LLM calls and improved translation response times in production.
+
+# Monitoring & Observability
+
+To help monitor the system after deployment, I contributed to dashboards tracking:
+- cache hit/miss ratios
+- translation latency
+- API usage metrics
+- operational health indicators
+
+This made it easier to debug production issues and understand the behavior of the translation pipeline under real traffic.
+
+# Challenges
+
+Some of the technical challenges included:
+- integrating AI translation into existing production systems
+- handling locale detection consistently across applications
+- balancing latency, cache freshness, and API costs
+- debugging runtime issues across multiple services and environments
+
+# Outcome
+
+The project became part of the marketplace internationalization initiative and gave me hands-on experience with:
+- production LLM integration
+- caching strategies
+- observability tooling
+- frontend architecture in large monorepos
+- collaboration across frontend, backend, and platform teams
+
+It was one of my first experiences working on an AI-related system in production at scale.

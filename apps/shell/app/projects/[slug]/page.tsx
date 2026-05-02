@@ -5,6 +5,9 @@ import Link             from 'next/link'
 import { Tag }          from '@repo/ui/tag'
 import { Prose }        from '@repo/ui/prose'
 import type { Metadata } from 'next'
+import { TocSidebar }   from './TocSidebar'
+import { ReadingProgress } from './ReadingProgress'
+import styles from './page.module.css'
 
 export const dynamic = 'force-static'
 
@@ -23,59 +26,91 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 }
 
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .trim()
+    .replace(/[\s_]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+function extractToc(content: string) {
+  const re = /^(#{2,3})\s+(.+)$/gm
+  const items: { id: string; text: string; depth: number }[] = []
+  let match
+  while ((match = re.exec(content)) !== null) {
+    items.push({ id: slugify(match[2].trim()), text: match[2].trim(), depth: match[1].length })
+  }
+  return items
+}
+
+function readingTime(content: string): number {
+  return Math.max(1, Math.ceil(content.trim().split(/\s+/).length / 200))
+}
+
+const mdxComponents = {
+  h2: ({ children }: { children?: React.ReactNode }) => (
+    <h2 id={slugify(String(children))}>{children}</h2>
+  ),
+  h3: ({ children }: { children?: React.ReactNode }) => (
+    <h3 id={slugify(String(children))}>{children}</h3>
+  ),
+}
+
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const project  = getProjectBySlug(slug)
   if (!project) notFound()
 
+  const toc  = extractToc(project.content)
+  const mins = readingTime(project.content)
+
   return (
     <main>
-      <article className="section" style={{ borderTop: 'none', paddingTop: '56px' }}>
-        <div className="container" style={{ maxWidth: '760px' }}>
+      <ReadingProgress />
 
-          {/* Back */}
-          <Link href="/projects" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--color-text-3)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '40px' }}>
-            ← projects
-          </Link>
+      <div className={styles.layout}>
+        <article className={styles.content}>
 
-          {/* Header */}
-          <div style={{ marginBottom: '48px' }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--color-teal)', letterSpacing: '3px', marginBottom: '16px' }}>
-              // PROJECT
-            </div>
-            <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 400, color: 'var(--color-text)', lineHeight: 1.15, marginBottom: '16px' }}>
-              {project.title}
-            </h1>
-            <p style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--color-text-3)', lineHeight: 1.7, marginBottom: '24px' }}>
-              {project.description}
-            </p>
+          <Link href="/projects" className={styles.backLink}>← projects</Link>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', paddingTop: '20px', borderTop: '0.5px solid var(--color-border)' }}>
-              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', flex: 1 }}>
+          <header className={styles.header}>
+            <div className={styles.eyebrow}>// PROJECT · {mins} MIN READ</div>
+            <h1 className={styles.title}>{project.title}</h1>
+            <p className={styles.description}>{project.description}</p>
+
+            <div className={styles.meta}>
+              <div className={styles.tags}>
                 {project.tags.map(tag => <Tag key={tag}>{tag}</Tag>)}
               </div>
-              <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+              <div className={styles.links}>
                 {project.live && (
-                  <a href={project.live} target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--color-teal)', border: '0.5px solid var(--color-teal-border)', padding: '5px 12px', borderRadius: 'var(--radius-sm)', textDecoration: 'none', background: 'var(--color-teal-dim)' }}>
+                  <a href={project.live} target="_blank" rel="noopener noreferrer" className={styles.linkLive}>
                     live →
                   </a>
                 )}
                 {project.github && (
-                  <a href={project.github} target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--color-text-3)', border: '0.5px solid var(--color-border-2)', padding: '5px 12px', borderRadius: 'var(--radius-sm)', textDecoration: 'none' }}>
+                  <a href={project.github} target="_blank" rel="noopener noreferrer" className={styles.linkGithub}>
                     github
                   </a>
                 )}
               </div>
             </div>
-          </div>
+          </header>
 
-          {/* MDX content */}
           <Prose>
-            <MDXRemote source={project.content} />
+            <MDXRemote source={project.content} components={mdxComponents} />
           </Prose>
 
-        </div>
-      </article>
+          <footer className={styles.footer}>
+            <Link href="/projects" className={styles.backLink}>← back to projects</Link>
+          </footer>
+
+        </article>
+
+        <TocSidebar items={toc} />
+      </div>
     </main>
   )
 }
