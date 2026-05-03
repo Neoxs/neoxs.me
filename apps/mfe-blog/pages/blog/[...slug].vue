@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { toNuxtSeoMeta } from '@repo/seo/nuxt'
+import { toNuxtSeoMeta, toNuxtHead } from '@repo/seo/nuxt'
 
 const route = useRoute()
 
@@ -66,13 +66,15 @@ onMounted(() => {
 
 onUnmounted(() => headingObserver?.disconnect())
 
-useSeoMeta(toNuxtSeoMeta({
-  title:         post.value.title,
+const articleSeo = {
+  title:         post.value.title ?? '',
   description:   post.value.description ?? '',
   canonicalPath: route.path,
   publishedTime: post.value.date ? new Date(post.value.date).toISOString() : new Date().toISOString(),
   tags:          post.value.tags ?? [],
-}))
+}
+useSeoMeta(toNuxtSeoMeta(articleSeo))
+useHead(toNuxtHead(articleSeo))
 </script>
 
 <template>

@@ -8,14 +8,14 @@ export interface NuxtSeoMeta {
   ogDescription:     string
   ogUrl:             string
   ogSiteName:        string
-  ogType:            string
+  ogType:            'website' | 'article'
   ogImage?:          string
-  twitterCard:       string
+  twitterCard:       'summary' | 'summary_large_image'
   twitterTitle:      string
   twitterDescription: string
   twitterImage?:     string
   articlePublishedTime?: string
-  articleAuthor?:        string
+  articleAuthor?:        string[]
   articleTag?:           string[]
 }
 
@@ -41,16 +41,24 @@ export function toNuxtSeoMeta(page: AnySeoConfig): NuxtSeoMeta {
     twitterImage:      r.imageUrl,
     ...(r.isArticle && {
       articlePublishedTime: r.publishedTime,
-      articleAuthor:        r.author,
+      articleAuthor:        [r.author],
       articleTag:           r.tags ?? [],
     }),
   }
 }
 
-export function toNuxtHead(): NuxtHead {
-  const favicon = siteConfig.favicon
-  if (!favicon) return {}
-  return {
-    link: [{ rel: 'icon', type: 'image/png', href: favicon }],
+export function toNuxtHead(page?: AnySeoConfig): NuxtHead {
+  const links: Array<{ rel: string; type?: string; href: string }> = []
+
+  if (page) {
+    const r = mergeWithDefaults(page)
+    links.push({ rel: 'canonical', href: r.canonicalUrl })
   }
+
+  const favicon = siteConfig.favicon
+  if (favicon) {
+    links.push({ rel: 'icon', type: 'image/png', href: favicon })
+  }
+
+  return links.length ? { link: links } : {}
 }
