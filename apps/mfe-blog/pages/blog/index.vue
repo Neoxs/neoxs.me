@@ -1,13 +1,15 @@
 <script setup lang="ts">
+import { toNuxtSeoMeta } from '@repo/seo/nuxt'
+
 const { data: posts } = await useAsyncData('posts',
   () => queryContent('/blog').sort({ date: -1 }).find()
 )
 
-useSeoMeta({
-  title: 'Blog — neoxs.me',
-  ogTitle: 'Blog — neoxs.me',
-  description: 'Thoughts on frontend engineering, distributed systems, and DevOps.',
-})
+useSeoMeta(toNuxtSeoMeta({
+  title:         'Blog',
+  description:   'Thoughts on frontend engineering, distributed systems, and DevOps.',
+  canonicalPath: '/blog',
+}))
 </script>
 
 <template>

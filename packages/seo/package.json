@@ -1,0 +1,44 @@
+{
+  "name": "@repo/seo",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    "./types": "./src/types.ts",
+    "./site":  "./src/site.ts",
+    "./next":  "./src/next.ts",
+    "./nuxt":  "./src/nuxt.ts",
+    "./react": "./src/react.ts"
+  },
+  "typesVersions": {
+    "*": {
+      "*": ["./src/*.ts"]
+    }
+  },
+  "scripts": {
+    "lint": "echo 'no lint'",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "next": "^16.2",
+    "nuxt": "^3.0.0"
+  },
+
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "next": {
+      "optional": true
+    },
+    "nuxt": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@repo/tsconfig": "workspace:*",
+    "@types/react": "^19.2.0",
+    "react": "^19.2.0",
+    "typescript": "^5"
+  }
+}

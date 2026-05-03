@@ -1,6 +1,9 @@
 export default defineNuxtConfig({
   modules: ['@nuxt/content'],
   css: ['@repo/ui/styles', '~/assets/global.css'],
+  build: {
+    transpile: ['@repo/seo'],
+  },
 devtools: { enabled: true },
   devServer: { port: 3002 },
   vite: {

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@repo/content": "workspace:*",
+    "@repo/seo": "workspace:*",
     "@repo/ui": "workspace:*",
     "gray-matter": "^4.0.3",
     "next": "^16.2",

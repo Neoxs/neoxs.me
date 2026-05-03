@@ -15,6 +15,7 @@
   "dependencies": {
     "nuxt": "^3",
     "@nuxt/content": "^2",
+    "@repo/seo": "workspace:*",
     "@repo/ui": "workspace:*",
     "mermaid": "^11"
   },

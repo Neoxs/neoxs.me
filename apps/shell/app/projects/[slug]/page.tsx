@@ -5,6 +5,7 @@ import Link             from 'next/link'
 import { Tag }          from '@repo/ui/tag'
 import { Prose }        from '@repo/ui/prose'
 import type { Metadata } from 'next'
+import { toNextMetadata } from '@repo/seo/next'
 import { TocSidebar }   from './TocSidebar'
 import { ReadingProgress } from './ReadingProgress'
 import styles from './page.module.css'
@@ -19,11 +20,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const project  = getProjectBySlug(slug)
   if (!project) return {}
-  return {
-    title:       project.title,
-    description: project.description,
-    openGraph:   { title: project.title, description: project.description },
-  }
+  return toNextMetadata({
+    title:         project.title,
+    description:   project.description,
+    canonicalPath: `/projects/${slug}`,
+  })
 }
 
 function slugify(text: string): string {

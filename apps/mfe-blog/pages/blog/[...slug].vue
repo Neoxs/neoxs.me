@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { toNuxtSeoMeta } from '@repo/seo/nuxt'
+
 const route = useRoute()
 
 const { data: post } = await useAsyncData(
@@ -64,14 +66,13 @@ onMounted(() => {
 
 onUnmounted(() => headingObserver?.disconnect())
 
-useSeoMeta({
-  title: () => `${post.value?.title} — neoxs.me`,
-  ogTitle: () => post.value?.title,
-  description: () => post.value?.description,
-  ogType: 'article',
-  articlePublishedTime: () => post.value?.date ? new Date(post.value.date).toISOString() : undefined,
-  articleAuthor: () => ['Yacine Kharoubi'],
-})
+useSeoMeta(toNuxtSeoMeta({
+  title:         post.value.title,
+  description:   post.value.description ?? '',
+  canonicalPath: route.path,
+  publishedTime: post.value.date ? new Date(post.value.date).toISOString() : new Date().toISOString(),
+  tags:          post.value.tags ?? [],
+}))
 </script>
 
 <template>

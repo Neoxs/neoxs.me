@@ -1,5 +1,7 @@
 <script setup lang="ts">
-useHead({ htmlAttrs: { lang: 'en' } })
+import { toNuxtHead } from '@repo/seo/nuxt'
+
+useHead({ htmlAttrs: { lang: 'en' }, ...toNuxtHead() })
 </script>
 
 <template>
