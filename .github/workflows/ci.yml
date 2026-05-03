@@ -100,3 +100,58 @@ jobs:
     permissions:
       contents: read
       packages: write
+
+  # ── E2E tests — full stack via Docker Compose (main push only) ─────────────
+  e2e:
+    needs: [build-shell, build-mfe-blog, build-mfe-lab, build-mfe-infra]
+    if: |
+      always() &&
+      github.event_name == 'push' &&
+      !contains(needs.*.result, 'failure')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker Compose stack
+        run: docker compose build
+
+      - name: Start stack
+        run: docker compose up -d
+
+      - name: Wait for stack to be healthy
+        run: |
+          timeout 120 bash -c '
+            until curl -sf http://localhost/healthz; do
+              echo "waiting for stack..."; sleep 5
+            done
+          '
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm --filter e2e exec playwright install --with-deps chromium
+
+      - name: Run E2E tests
+        run: pnpm --filter e2e test:e2e
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: apps/e2e/playwright-report/
+          retention-days: 7
+
+      - name: Tear down stack
+        if: always()
+        run: docker compose down
