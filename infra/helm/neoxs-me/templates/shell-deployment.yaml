@@ -1,0 +1,92 @@
+# ── Deployment — shell (Next.js SSR) ─────────────────────────────────────────
+#
+# A Deployment is the K8s equivalent of a Docker Compose service.
+# It tells K8s: "keep N copies of this pod running, and do rolling updates".
+#
+# Anatomy of a Deployment:
+#   spec.replicas           → how many pods
+#   spec.selector           → which pods this Deployment owns (must match template labels)
+#   spec.template           → the pod blueprint (one container per MFE)
+#   spec.strategy           → how to roll out updates (RollingUpdate = zero-downtime)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shell
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "neoxs-me.labels" . | nindent 4 }}
+    app.kubernetes.io/component: shell
+spec:
+  replicas: {{ .Values.shell.replicas }}
+
+  # selector MUST match the labels in spec.template.metadata.labels.
+  # K8s uses this to know which pods belong to this Deployment.
+  selector:
+    matchLabels:
+      {{- include "neoxs-me.selectorLabels" (dict "name" "shell" "Release" .Release) | nindent 6 }}
+
+  # Rolling update: bring up 1 new pod before taking down 1 old pod.
+  # maxUnavailable: 0  → never drop below desired replica count during update
+  # maxSurge: 1        → allow 1 extra pod during the transition
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  template:
+    metadata:
+      labels:
+        {{- include "neoxs-me.selectorLabels" (dict "name" "shell" "Release" .Release) | nindent 8 }}
+        {{- include "neoxs-me.labels" . | nindent 8 }}
+    spec:
+      # terminationGracePeriodSeconds: how long K8s waits after sending SIGTERM
+      # before force-killing. Next.js handles SIGTERM gracefully.
+      terminationGracePeriodSeconds: 30
+
+      containers:
+        - name: shell
+          image: {{ include "neoxs-me.image" (dict "Values" .Values "app" .Values.shell) }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.shell.port }}
+              protocol: TCP
+
+          # Environment variables — same values as docker-compose.yml
+          # K8s service names are DNS-resolvable within the namespace
+          env:
+            {{- range $k, $v := .Values.shell.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+
+          # readinessProbe: gates traffic. K8s won't send requests to this pod
+          # until the probe succeeds. Analog: Docker healthcheck.
+          # Start checking after 10s, then every 5s. 3 failures → not ready.
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: {{ .Values.shell.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+
+          # livenessProbe: restarts the pod if it becomes unresponsive.
+          # More lenient timing than readiness — we don't want premature restarts.
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: {{ .Values.shell.port }}
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            failureThreshold: 3
+
+          # Resource requests/limits — prevents one noisy-neighbor pod from
+          # starving others on a shared node.
+          resources:
+            requests:
+              cpu: {{ .Values.shell.resources.requests.cpu | quote }}
+              memory: {{ .Values.shell.resources.requests.memory | quote }}
+            limits:
+              cpu: {{ .Values.shell.resources.limits.cpu | quote }}
+              memory: {{ .Values.shell.resources.limits.memory | quote }}

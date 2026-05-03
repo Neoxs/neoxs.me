@@ -1,0 +1,43 @@
+# ── values.prod.yaml — PRODUCTION OVERRIDES ─────────────────────────────────
+#
+# Applied on top of values.yaml. Only override what differs in prod.
+# Usage:
+#   helm upgrade --install neoxs-me ./infra/helm/neoxs-me \
+#     -f infra/helm/neoxs-me/values.prod.yaml \
+#     -n portfolio --create-namespace
+
+global:
+  registry: "ghcr.io/neoxs"
+  imagePullPolicy: Always
+
+# In prod each app gets its own pinned sha tag set by CI (e.g. sha-abc1234).
+# Placeholders here — your deploy workflow overwrites these with --set flags:
+#   --set shell.tag=sha-abc1234 --set mfeBlog.tag=sha-abc1234 ...
+shell:
+  tag: latest
+  replicas: 1
+
+mfeBlog:
+  tag: latest
+  replicas: 1
+
+mfeLab:
+  tag: latest
+  replicas: 1
+
+mfeInfra:
+  tag: latest
+  replicas: 1
+
+ingress:
+  host: neoxs.me
+  tls: true
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+
+certManager:
+  enabled: true
+  clusterIssuer: letsencrypt-prod
+  email: "y.abdelkaderkharoubi@gmail.com"

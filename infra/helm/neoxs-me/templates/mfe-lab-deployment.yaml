@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mfe-lab
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "neoxs-me.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mfe-lab
+spec:
+  replicas: {{ .Values.mfeLab.replicas }}
+  selector:
+    matchLabels:
+      {{- include "neoxs-me.selectorLabels" (dict "name" "mfe-lab" "Release" .Release) | nindent 6 }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        {{- include "neoxs-me.selectorLabels" (dict "name" "mfe-lab" "Release" .Release) | nindent 8 }}
+        {{- include "neoxs-me.labels" . | nindent 8 }}
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: mfe-lab
+          image: {{ include "neoxs-me.image" (dict "Values" .Values "app" .Values.mfeLab) }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.mfeLab.port }}
+              protocol: TCP
+          # Vite SPA served by nginx — starts instantly, short probe delays
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: {{ .Values.mfeLab.port }}
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: {{ .Values.mfeLab.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: {{ .Values.mfeLab.resources.requests.cpu | quote }}
+              memory: {{ .Values.mfeLab.resources.requests.memory | quote }}
+            limits:
+              cpu: {{ .Values.mfeLab.resources.limits.cpu | quote }}
+              memory: {{ .Values.mfeLab.resources.limits.memory | quote }}

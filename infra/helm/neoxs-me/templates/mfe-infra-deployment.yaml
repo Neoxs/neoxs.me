@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mfe-infra
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "neoxs-me.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mfe-infra
+spec:
+  replicas: {{ .Values.mfeInfra.replicas }}
+  selector:
+    matchLabels:
+      {{- include "neoxs-me.selectorLabels" (dict "name" "mfe-infra" "Release" .Release) | nindent 6 }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        {{- include "neoxs-me.selectorLabels" (dict "name" "mfe-infra" "Release" .Release) | nindent 8 }}
+        {{- include "neoxs-me.labels" . | nindent 8 }}
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: mfe-infra
+          image: {{ include "neoxs-me.image" (dict "Values" .Values "app" .Values.mfeInfra) }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.mfeInfra.port }}
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: {{ .Values.mfeInfra.port }}
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: {{ .Values.mfeInfra.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: {{ .Values.mfeInfra.resources.requests.cpu | quote }}
+              memory: {{ .Values.mfeInfra.resources.requests.memory | quote }}
+            limits:
+              cpu: {{ .Values.mfeInfra.resources.limits.cpu | quote }}
+              memory: {{ .Values.mfeInfra.resources.limits.memory | quote }}

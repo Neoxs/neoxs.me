@@ -1,0 +1,19 @@
+# ConfigMap for security response headers.
+#
+# nginx.ingress.kubernetes.io/add-headers points to this ConfigMap.
+# The ingress-nginx controller injects these headers into every response
+# that passes through the Ingress — without needing `configuration-snippet`.
+#
+# This is the recommended pattern: no snippet = no admission webhook block,
+# and headers are easy to audit in one place.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: security-headers
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "neoxs-me.labels" . | nindent 4 }}
+data:
+  X-Frame-Options: "SAMEORIGIN"
+  X-Content-Type-Options: "nosniff"
+  Referrer-Policy: "strict-origin-when-cross-origin"

@@ -1,0 +1,116 @@
+# ── values.yaml — LOCAL / DEV DEFAULTS ──────────────────────────────────────
+#
+# These are the defaults used when you run:
+#   helm install neoxs-me ./infra/helm/neoxs-me
+#
+# Production overrides live in values.prod.yaml and are applied with:
+#   helm upgrade neoxs-me ./infra/helm/neoxs-me -f values.prod.yaml
+#
+# Helm deep-merges files, so values.prod.yaml only needs the keys it overrides.
+
+# ── Container image settings ─────────────────────────────────────────────────
+global:
+  # Registry prefix. Empty string = no prefix (used with `k3d image import`
+  # for local dev). Set to ghcr.io/neoxs in prod.
+  registry: ""
+
+  # IfNotPresent: don't re-pull if the image is already on the node (good for local dev)
+  # Always: always pull (good for prod with :latest tags — but better to use sha tags in prod)
+  imagePullPolicy: IfNotPresent
+
+# ── Per-application settings ─────────────────────────────────────────────────
+# Each app maps to one Docker Compose service.
+# Kubernetes equivalent: Deployment (manages pods) + Service (internal DNS).
+
+shell:
+  image: shell
+  tag: latest
+  # The port your process listens on INSIDE the container
+  port: 3000
+  # How many identical pods to run. Start with 1, scale up later.
+  replicas: 1
+  # Environment variables — same as docker-compose.yml `environment:` block
+  # In K8s, service names resolve via CoreDNS: <service-name>.<namespace>.svc.cluster.local
+  # Within the same namespace, just the service name works: http://mfe-blog:3002
+  env:
+    NODE_ENV: production
+    MFE_BLOG_URL: "http://mfe-blog:3002"
+    MFE_LAB_URL: "http://mfe-lab:3003"
+    MFE_INFRA_URL: "http://mfe-infra:3004"
+  # Resource requests = what K8s guarantees your pod; limits = hard cap.
+  # The scheduler uses requests to decide which node to place the pod on.
+  resources:
+    requests:
+      cpu: "100m"      # 100m = 0.1 CPU core
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+mfeBlog:
+  image: mfe-blog
+  tag: latest
+  port: 3002
+  replicas: 1
+  env:
+    NODE_ENV: production
+    HOST: "0.0.0.0"
+    PORT: "3002"
+    NITRO_HOST: "0.0.0.0"
+    NITRO_PORT: "3002"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "128Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+
+mfeLab:
+  image: mfe-lab
+  tag: latest
+  port: 3003
+  replicas: 1
+  env: {}
+  resources:
+    requests:
+      cpu: "20m"
+      memory: "64Mi"
+    limits:
+      cpu: "100m"
+      memory: "128Mi"
+
+mfeInfra:
+  image: mfe-infra
+  tag: latest
+  port: 3004
+  replicas: 1
+  env: {}
+  resources:
+    requests:
+      cpu: "20m"
+      memory: "64Mi"
+    limits:
+      cpu: "100m"
+      memory: "128Mi"
+
+# ── Ingress settings ─────────────────────────────────────────────────────────
+# Ingress = the HTTP router in front of all your services.
+# Replaces the front-door nginx container from docker-compose.yml.
+# Requires ingress-nginx controller to be installed in the cluster (see README).
+ingress:
+  # For local k3d dev use "localhost"; for prod use your real domain.
+  host: localhost
+  # Enable TLS (HTTPS). Requires cert-manager in the cluster.
+  # Keep false for local dev.
+  tls: false
+  # Extra annotations passed through to the Ingress resource.
+  # ingress-nginx reads these to configure nginx behavior per-route.
+  annotations: {}
+
+# ── cert-manager settings (Phase 2 — production only) ────────────────────────
+certManager:
+  enabled: false
+  # Name of the ClusterIssuer resource you'll create on the VPS
+  clusterIssuer: letsencrypt-prod
+  email: ""

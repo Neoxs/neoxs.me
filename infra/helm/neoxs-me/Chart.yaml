@@ -1,0 +1,14 @@
+apiVersion: v2
+name: neoxs-me
+description: neoxs.me micro-frontend portfolio
+type: application
+
+# Chart version — bump this when you change the chart structure
+version: 0.1.0
+
+# App version — what your code is at (informational only, doesn't affect Helm behavior)
+appVersion: "latest"
+
+# No dependencies for now — ingress-nginx is installed separately as a cluster addon.
+# This is the right split: cluster-level infra (ingress, cert-manager) goes in with
+# separate `helm install` commands; your app chart stays focused on your app.

@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mfe-blog
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "neoxs-me.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mfe-blog
+spec:
+  replicas: {{ .Values.mfeBlog.replicas }}
+  selector:
+    matchLabels:
+      {{- include "neoxs-me.selectorLabels" (dict "name" "mfe-blog" "Release" .Release) | nindent 6 }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        {{- include "neoxs-me.selectorLabels" (dict "name" "mfe-blog" "Release" .Release) | nindent 8 }}
+        {{- include "neoxs-me.labels" . | nindent 8 }}
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: mfe-blog
+          image: {{ include "neoxs-me.image" (dict "Values" .Values "app" .Values.mfeBlog) }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.mfeBlog.port }}
+              protocol: TCP
+          env:
+            {{- range $k, $v := .Values.mfeBlog.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+          # Nuxt SSR takes longer to start — higher initialDelaySeconds
+          readinessProbe:
+            httpGet:
+              path: /blog
+              port: {{ .Values.mfeBlog.port }}
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /blog
+              port: {{ .Values.mfeBlog.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: {{ .Values.mfeBlog.resources.requests.cpu | quote }}
+              memory: {{ .Values.mfeBlog.resources.requests.memory | quote }}
+            limits:
+              cpu: {{ .Values.mfeBlog.resources.limits.cpu | quote }}
+              memory: {{ .Values.mfeBlog.resources.limits.memory | quote }}

@@ -1,0 +1,32 @@
+# ── Service — shell ───────────────────────────────────────────────────────────
+#
+# A Service is a stable network endpoint that proxies to your pods.
+# Pods are ephemeral (they get new IPs on restart) — the Service IP is stable.
+#
+# Type ClusterIP = internal only. The Ingress will route external traffic to it.
+# This is the K8s equivalent of Docker's internal container-to-container DNS.
+#
+# DNS name inside the cluster: shell.portfolio.svc.cluster.local
+# Shorthand within same namespace: shell
+# That's why shell's env has MFE_BLOG_URL: "http://mfe-blog:3002" — same idea.
+apiVersion: v1
+kind: Service
+metadata:
+  name: shell
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "neoxs-me.labels" . | nindent 4 }}
+    app.kubernetes.io/component: shell
+spec:
+  type: ClusterIP
+
+  # selector: which pods to forward traffic to.
+  # Must match the pod labels set in the Deployment template.
+  selector:
+    {{- include "neoxs-me.selectorLabels" (dict "name" "shell" "Release" .Release) | nindent 4 }}
+
+  ports:
+    - name: http
+      port: {{ .Values.shell.port }}           # port on the Service (what other pods call)
+      targetPort: {{ .Values.shell.port }}     # port on the pod container
+      protocol: TCP

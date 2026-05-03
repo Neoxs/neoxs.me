@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mfe-infra
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "neoxs-me.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mfe-infra
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "neoxs-me.selectorLabels" (dict "name" "mfe-infra" "Release" .Release) | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ .Values.mfeInfra.port }}
+      targetPort: {{ .Values.mfeInfra.port }}
+      protocol: TCP

@@ -6,8 +6,8 @@ import { Navbar } from '../Navbar'
 const NAV_LINKS = [
   { label: 'work',     href: '/#work'   },
   { label: 'stack',    href: '/#stack'  },
-  { label: 'infra',    href: '/infra'   },
-  { label: 'blog',     href: '/blog'    },
+  { label: 'infra',    href: '/infra/'  },
+  { label: 'blog',     href: '/blog/'    },
 ]
 
 export function SiteNavbar() {

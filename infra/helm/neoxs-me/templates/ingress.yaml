@@ -1,0 +1,140 @@
+# ── Ingress ──────────────────────────────────────────────────────────────────
+#
+# An Ingress is an HTTP routing table. It replaces the front-door nginx container
+# from docker-compose.yml entirely.
+#
+# The ingress-nginx controller reads these rules and configures its own nginx instance
+# automatically — you never write nginx.conf again for routing.
+#
+# Mapping from docker/nginx/nginx.conf → this file:
+#   upstream shell_upstream     → Service "shell"
+#   upstream mfe_blog_upstream  → Service "mfe-blog"
+#   upstream mfe_lab_upstream   → Service "mfe-lab"
+#   upstream mfe_infra_upstream → Service "mfe-infra"
+#   location /_nuxt/            → path /_nuxt/ → mfe-blog
+#   location /api/_content/     → path /api/_content/ → mfe-blog
+#   location /_next/            → path /_next/ → shell
+#   location /blog              → path /blog → mfe-blog
+#   location /lab/              → path /lab/ → mfe-lab
+#   location /infra/            → path /infra/ → mfe-infra
+#   location /                  → path / → shell (catch-all)
+#
+# Path matching in K8s Ingress:
+#   Prefix: "/blog" matches /blog, /blog/, /blog/post/1 (anything starting with /blog)
+#   Exact:  "/lab"  matches only /lab
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: neoxs-me
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "neoxs-me.labels" . | nindent 4 }}
+  annotations:
+    # Tell K8s which Ingress controller handles this resource
+    kubernetes.io/ingress.class: "nginx"
+
+    # Proxy timeouts — mirrors nginx.conf proxy_connect_timeout / proxy_read_timeout
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "10"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+
+    # Disable buffering for SSR streams (Next.js, Nuxt)
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+
+    # Security headers via ConfigMap — avoids configuration-snippet which is
+    # blocked by the ingress-nginx admission webhook by default.
+    # The /lab and /infra redirects are handled by the SPA containers themselves.
+    nginx.ingress.kubernetes.io/add-headers: "{{ .Release.Namespace }}/security-headers"
+
+    {{- if .Values.certManager.enabled }}
+    # Tell cert-manager which ClusterIssuer to use for TLS certificates
+    cert-manager.io/cluster-issuer: {{ .Values.certManager.clusterIssuer | quote }}
+    {{- end }}
+
+    {{- range $k, $v := .Values.ingress.annotations }}
+    {{ $k }}: {{ $v | quote }}
+    {{- end }}
+
+spec:
+  # ingressClassName selects which controller processes this Ingress.
+  # "nginx" = the ingress-nginx controller you installed.
+  ingressClassName: nginx
+
+  {{- if .Values.ingress.tls }}
+  # TLS termination: cert-manager will create/renew the certificate automatically
+  # and store it in the secret named below.
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host | quote }}
+      secretName: neoxs-me-tls
+  {{- end }}
+
+  rules:
+    - host: {{ .Values.ingress.host | quote }}
+      http:
+        paths:
+          # ── Nuxt internal assets (highest priority — must come before /blog) ─
+          # Vite-generated chunks: /_nuxt/assets/xxx.js
+          - path: /_nuxt/
+            pathType: Prefix
+            backend:
+              service:
+                name: mfe-blog
+                port:
+                  number: {{ .Values.mfeBlog.port }}
+
+          # Nuxt Content API: /api/_content/query/...
+          - path: /api/_content/
+            pathType: Prefix
+            backend:
+              service:
+                name: mfe-blog
+                port:
+                  number: {{ .Values.mfeBlog.port }}
+
+          # ── Next.js static assets ────────────────────────────────────────────
+          - path: /_next/
+            pathType: Prefix
+            backend:
+              service:
+                name: shell
+                port:
+                  number: {{ .Values.shell.port }}
+
+          # ── Blog MFE (Nuxt SSR) ─────────────────────────────────────────────
+          - path: /blog
+            pathType: Prefix
+            backend:
+              service:
+                name: mfe-blog
+                port:
+                  number: {{ .Values.mfeBlog.port }}
+
+          # ── Lab MFE (Vite SPA + nginx) ───────────────────────────────────────
+          - path: /lab/
+            pathType: Prefix
+            backend:
+              service:
+                name: mfe-lab
+                port:
+                  number: {{ .Values.mfeLab.port }}
+
+          # ── Infra MFE (Vite SPA + nginx) ─────────────────────────────────────
+          - path: /infra/
+            pathType: Prefix
+            backend:
+              service:
+                name: mfe-infra
+                port:
+                  number: {{ .Values.mfeInfra.port }}
+
+          # ── Shell catch-all (Next.js SSR) ────────────────────────────────────
+          # Must be last — Prefix "/" matches everything not caught above
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: shell
+                port:
+                  number: {{ .Values.shell.port }}
