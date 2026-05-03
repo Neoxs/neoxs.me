@@ -16,8 +16,7 @@ function getBlogDir(): string {
   return path.resolve(__dirname, '../../../apps/mfe-blog/content/blog')
 }
 
-export function getAllPosts(): Post[] {
-  const dir = getBlogDir()
+export function getAllPosts(dir = getBlogDir()): Post[] {
   if (!fs.existsSync(dir)) return []
 
   return fs
@@ -38,6 +37,6 @@ export function getAllPosts(): Post[] {
     .sort((a: Post, b: Post) => (a.date < b.date ? 1 : -1))
 }
 
-export function getPostBySlug(slug: string): Post | undefined {
-  return getAllPosts().find(p => p.slug === slug)
+export function getPostBySlug(slug: string, dir?: string): Post | undefined {
+  return getAllPosts(dir).find(p => p.slug === slug)
 }

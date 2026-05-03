@@ -1,0 +1,60 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        default: production
+        type: choice
+        options: [production, staging]
+      shell_tag:
+        description: shell image tag (e.g. sha-abc1234)
+        required: false
+        default: latest
+      mfe_blog_tag:
+        description: mfe-blog image tag
+        required: false
+        default: latest
+      mfe_lab_tag:
+        description: mfe-lab image tag
+        required: false
+        default: latest
+      mfe_infra_tag:
+        description: mfe-infra image tag
+        required: false
+        default: latest
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Configure kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Helm upgrade
+        run: |
+          helm upgrade --install neoxs-me ./infra/helm/neoxs-me \
+            --namespace portfolio \
+            --create-namespace \
+            --values ./infra/helm/neoxs-me/values.yaml \
+            --values ./infra/helm/neoxs-me/values.${{ inputs.environment }}.yaml \
+            --set images.shell=ghcr.io/neoxs/neoxs-me-shell:${{ inputs.shell_tag }} \
+            --set images.mfeBlog=ghcr.io/neoxs/neoxs-me-mfe-blog:${{ inputs.mfe_blog_tag }} \
+            --set images.mfeLab=ghcr.io/neoxs/neoxs-me-mfe-lab:${{ inputs.mfe_lab_tag }} \
+            --set images.mfeInfra=ghcr.io/neoxs/neoxs-me-mfe-infra:${{ inputs.mfe_infra_tag }} \
+            --wait \
+            --timeout 5m

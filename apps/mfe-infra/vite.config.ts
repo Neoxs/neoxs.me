@@ -9,7 +9,6 @@ import tailwindcss from '@tailwindcss/vite'
 import path from 'node:path'
 
 const config = defineConfig({
-  resolve: { tsconfigPaths: true },
   plugins: [
     devtools(),
     tailwindcss(),
@@ -38,10 +37,6 @@ const config = defineConfig({
   build: {
     outDir: 'dist',
     rollupOptions: { input: 'index.html' },
-  },
-  test: {
-    environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
   },
 })
 

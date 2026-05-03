@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ── Detect which apps changed ──────────────────────────────────────────────
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      shell:     ${{ steps.filter.outputs.shell }}
+      mfe-blog:  ${{ steps.filter.outputs.mfe-blog }}
+      mfe-lab:   ${{ steps.filter.outputs.mfe-lab }}
+      mfe-infra: ${{ steps.filter.outputs.mfe-infra }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            shell:
+              - 'apps/shell/**'
+              - 'packages/**'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+            mfe-blog:
+              - 'apps/mfe-blog/**'
+              - 'packages/**'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+            mfe-lab:
+              - 'apps/mfe-lab/**'
+              - 'packages/**'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+            mfe-infra:
+              - 'apps/mfe-infra/**'
+              - 'packages/**'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+
+  # ── Unit + integration tests (all packages & apps) ─────────────────────────
+  test:
+    uses: ./.github/workflows/reusable-test.yml
+    with:
+      node-version: '22'
+
+  # ── Docker builds (only for changed apps, only on main push) ───────────────
+  build-shell:
+    needs: [changes, test]
+    if: needs.changes.outputs.shell == 'true' && github.event_name == 'push'
+    uses: ./.github/workflows/reusable-docker.yml
+    with:
+      app: shell
+      image: ghcr.io/neoxs/neoxs-me-shell
+      dockerfile: apps/shell/Dockerfile
+    permissions:
+      contents: read
+      packages: write
+
+  build-mfe-blog:
+    needs: [changes, test]
+    if: needs.changes.outputs['mfe-blog'] == 'true' && github.event_name == 'push'
+    uses: ./.github/workflows/reusable-docker.yml
+    with:
+      app: mfe-blog
+      image: ghcr.io/neoxs/neoxs-me-mfe-blog
+      dockerfile: apps/mfe-blog/Dockerfile
+    permissions:
+      contents: read
+      packages: write
+
+  build-mfe-lab:
+    needs: [changes, test]
+    if: needs.changes.outputs['mfe-lab'] == 'true' && github.event_name == 'push'
+    uses: ./.github/workflows/reusable-docker.yml
+    with:
+      app: mfe-lab
+      image: ghcr.io/neoxs/neoxs-me-mfe-lab
+      dockerfile: apps/mfe-lab/Dockerfile
+    permissions:
+      contents: read
+      packages: write
+
+  build-mfe-infra:
+    needs: [changes, test]
+    if: needs.changes.outputs['mfe-infra'] == 'true' && github.event_name == 'push'
+    uses: ./.github/workflows/reusable-docker.yml
+    with:
+      app: mfe-infra
+      image: ghcr.io/neoxs/neoxs-me-mfe-infra
+      dockerfile: apps/mfe-infra/Dockerfile
+    permissions:
+      contents: read
+      packages: write
