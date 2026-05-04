@@ -1,0 +1,50 @@
+name: Feature request / idea
+description: Suggest an improvement or new learning experiment
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea for a new feature, a missing architectural pattern, or a technology worth exploring? Share it here.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve, or what do you want to explore?
+      description: Describe the motivation behind the request.
+      placeholder: It would be interesting to add module federation so MFEs can share runtime dependencies...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How would you approach this? Any references or prior art?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Microfrontend architecture
+        - Shared packages
+        - CI/CD pipeline
+        - Kubernetes / Helm
+        - Testing strategy
+        - Performance
+        - Accessibility
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Links, screenshots, or anything else that helps.
+    validations:
+      required: false

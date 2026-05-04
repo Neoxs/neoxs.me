@@ -1,0 +1,42 @@
+# ── values.staging.yaml — STAGING OVERRIDES ──────────────────────────────────
+#
+# Applied on top of values.yaml. Only overrides what differs in staging.
+# Usage:
+#   helm upgrade --install neoxs-me-staging ./infra/helm/neoxs-me \
+#     -f infra/helm/neoxs-me/values.staging.yaml \
+#     -n portfolio-staging --create-namespace
+
+global:
+  registry: "ghcr.io/neoxs"
+  imagePullPolicy: Always
+
+# Staging uses the latest build from the main branch (no pinned SHA).
+# CI can still override individual tags with --set flags if needed.
+shell:
+  tag: latest
+  replicas: 1
+
+mfeBlog:
+  tag: latest
+  replicas: 1
+
+mfeLab:
+  tag: latest
+  replicas: 1
+
+mfeInfra:
+  tag: latest
+  replicas: 1
+
+ingress:
+  host: staging.neoxs.me
+  tls: true
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+
+certManager:
+  enabled: true
+  clusterIssuer: letsencrypt-prod
+  email: "y.abdelkaderkharoubi@gmail.com"

@@ -1,0 +1,17 @@
+# CODEOWNERS
+# Each line is a file pattern followed by one or more owners.
+# Owners are automatically requested for review when someone opens a PR
+# that modifies matching files.
+
+# Default owner for everything
+* @neoxs
+
+# Helm / infrastructure changes require extra attention
+/infra/ @neoxs
+/docker/ @neoxs
+/.github/workflows/ @neoxs
+
+# Shared packages — changes here affect all apps
+/packages/ui/ @neoxs
+/packages/content/ @neoxs
+/packages/seo/ @neoxs

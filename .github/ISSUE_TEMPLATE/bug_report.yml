@@ -1,0 +1,74 @@
+name: Bug report
+description: Something is broken on the site or in the codebase
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please fill in as much detail as you can.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the bug.
+      placeholder: When I visit /blog, the page shows a blank screen...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: How can the bug be reproduced consistently?
+      placeholder: |
+        1. Go to ...
+        2. Click on ...
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part of the project is affected?
+      options:
+        - Shell (/)
+        - Blog MFE (/blog)
+        - Lab MFE (/lab)
+        - Infra dashboard
+        - Shared UI package
+        - CI/CD pipeline
+        - Helm / Kubernetes
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser, OS, Node version (if running locally)
+      placeholder: |
+        - Browser: Chrome 123
+        - OS: macOS 14
+        - Node: 22.x
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or screenshots
+      description: Paste any console errors, CI logs, or screenshots here.
+      render: shell
+    validations:
+      required: false
