@@ -52,9 +52,9 @@ jobs:
             --create-namespace \
             --values ./infra/helm/neoxs-me/values.yaml \
             --values ./infra/helm/neoxs-me/values.${{ inputs.environment }}.yaml \
-            --set images.shell=ghcr.io/neoxs/neoxs-me-shell:${{ inputs.shell_tag }} \
-            --set images.mfeBlog=ghcr.io/neoxs/neoxs-me-mfe-blog:${{ inputs.mfe_blog_tag }} \
-            --set images.mfeLab=ghcr.io/neoxs/neoxs-me-mfe-lab:${{ inputs.mfe_lab_tag }} \
-            --set images.mfeInfra=ghcr.io/neoxs/neoxs-me-mfe-infra:${{ inputs.mfe_infra_tag }} \
+            --set shell.tag=${{ inputs.shell_tag }} \
+            --set mfeBlog.tag=${{ inputs.mfe_blog_tag }} \
+            --set mfeLab.tag=${{ inputs.mfe_lab_tag }} \
+            --set mfeInfra.tag=${{ inputs.mfe_infra_tag }} \
             --wait \
             --timeout 5m

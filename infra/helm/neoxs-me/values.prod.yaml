@@ -14,18 +14,22 @@ global:
 # Placeholders here — your deploy workflow overwrites these with --set flags:
 #   --set shell.tag=sha-abc1234 --set mfeBlog.tag=sha-abc1234 ...
 shell:
+  image: neoxs-me-shell
   tag: latest
   replicas: 1
 
 mfeBlog:
+  image: neoxs-me-mfe-blog
   tag: latest
   replicas: 1
 
 mfeLab:
+  image: neoxs-me-mfe-lab
   tag: latest
   replicas: 1
 
 mfeInfra:
+  image: neoxs-me-mfe-infra
   tag: latest
   replicas: 1
 
