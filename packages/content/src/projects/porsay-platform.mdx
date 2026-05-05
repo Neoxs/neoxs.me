@@ -1,0 +1,34 @@
+---
+title: "Porsay — logistics platform"
+description: "Full-stack on a Paris logistics product: Express/TypeScript APIs, JWT auth, carrier routing, PDF labels & S3, cron jobs — plus GitHub Actions CI with ephemeral PostgreSQL."
+tags: ["Node.js", "TypeScript", "PostgreSQL", "Docker"]
+featured: false
+live: "https://porsay.com/en/"
+---
+
+## Role
+
+**Full-stack developer** on [**Porsay**](https://porsay.com/en/)’s **delivery / logistics** platform — backend-heavy work with clear product impact on shippers, carriers, and operations.
+
+## Backend APIs (Express, TypeScript)
+
+- **REST APIs** for the **core logistics domain**: parcel creation, **status lifecycle** (pickup → transit → delivered / failed), operational queries — platform handling **1 000+ shipments per day** at peak.
+- **Authentication**: **JWT** + **refresh tokens**, **role middleware** (client / admin / carrier), **API-key rate limiting** for **e-commerce integrators**.
+
+## Domain features
+
+- **PDF label generation** (transport documents, **GS1-128** barcodes) with **AWS S3** storage and **time-limited signed URLs** for secure hand-off to printers and partners.
+- **Routing engine**: rule-based assignment of parcels to carriers (**Colissimo**, **Chronopost**, **DPD**, etc.) from **weight**, **destination**, and **contractual SLAs**.
+
+## Automation & data hygiene
+
+- **Scheduled jobs** (**cron**): retry failed deliveries, purge expired records, **daily operational reports**.
+
+## Engineering discipline
+
+- **GitHub Actions**: **Jest** / **Supertest**, lint, **Docker** build, deploy flows in CI so tests mirrored production semantics.
+- **OpenAPI / Swagger**-style contracts where teams coordinated integrations.
+
+## Stack snapshot
+
+**Node.js**, **Express**, **TypeScript**, **PostgreSQL** (**Prisma** where applicable), **Redis** where appropriate for queues or cache, **Docker**, **REST** throughout.

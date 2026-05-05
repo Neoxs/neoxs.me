@@ -1,0 +1,54 @@
+---
+title: "Rakuten France — C2C marketplace"
+description: "Early-career software engineer on a Next.js micro-frontend monorepo: mostly frontend and shared UI, growing backend and DevOps exposure — tight collaboration with PM, engineers, and QA."
+tags: ["React", "Next.js", "TypeScript", "Kubernetes", "GitHub Actions"]
+featured: true
+live: "https://fr.shopping.rakuten.com/"
+---
+
+## Role
+
+**Software Engineer** on the **C2C marketplace** at Rakuten France. I focus on **frontend**: React / Next.js, the shared **Material UI** library, tests, and accessibility — and I pick up **backend** (Java / Spring Boot, Node.js) and **DevOps** tasks when the team needs help. I’m still building depth; I contribute inside patterns and processes the org already has, not as the person who designed the whole platform.
+
+## Collaboration (PM, engineering, QA)
+
+Day to day I work **with the PM** on scope, acceptance criteria, and trade-offs before and during sprints. I sync with **other developers** (frontend, backend, platform) on APIs, releases, and shared libraries — lots of **PR reviews**, pairing, and slack threads to stay aligned. I coordinate closely with **QA**: reproducing issues, fixing bugs they surface, adjusting tests when behaviour changes, and making sure what ships matches what we agreed to test. Shipping is a team sport here.
+
+## Design system & UI (`@rakutenfrance/mui`)
+
+- **Contributed to** **`@rakutenfrance/mui`** — a large shared library (**many MUI-based components**) in a **Lerna** monorepo with **Storybook**, versioning, and design tokens — alongside other maintainers.
+- **Helped ship** UI for real flows (e.g. listing-related components like **GroupedDropzone** / **GroupedSortableGallery**) with **Jest** and **Storybook** coverage.
+- **Worked on** mapping **Figma DSM** tokens into components (e.g. **Typography** / CSS variables) as part of tightening design–code alignment.
+- **Accessibility:** contributed to tagging **Storybook** stories with **a11y** tooling and improving labels / patterns where we could — always in coordination with reviews from peers and QA.
+
+## LLM translation & international expansion
+
+- **Contributed to** the **LLM-powered translation** work (**OpenAI**, **Tolgee**) for API-facing copy — design and integration happened **with backend and product**, not solo.
+- **Helped implement** **Redis** caching for translation responses and tuning via **config-service**, plus followed team practices for **Grafana / Prometheus** and **Kibana** so we could see cache behaviour and issues in prod.
+
+## Tolgee & marketplace context
+
+- **Contributed to** **MarketplaceContext** and related **Tolgee** wiring (providers, flags, locale behaviour) and to **MarketingBanner** / header work, including moving some **Storybook** mocks to **MSW** for more stable tests — building on patterns the team already used.
+
+## CI/CD & quality
+
+- **Contributed to** moving **c2c-fo** from **Jenkins** toward **GitHub Actions** (PR flows, builds, deploy hooks) and to improving how we run tests in CI — I wasn’t the only person touching pipelines; I executed migrations and fixes **following team conventions**.
+- **Helped maintain** **PR validation** on the shared monorepo (**Cypress**, **Jest**, automation around checks) and took part in the **ESLint v9** rollout — fixing packages, unblocking CI, pairing when configs broke.
+- **Contributed to** shifting more tests toward **Storybook** interaction tests where it made sense, which **helped shorten** CI runs on our squad — together with others refining what ran where.
+
+## Performance & standards
+
+- **Supported** performance and UX stability work (**bundle size**, **CLS**, fonts) **together with** frontend leads — scripts, splits, and library tweaks where I could help, not as the architect of the whole programme.
+- **Followed and contributed to** shared **ESLint / TypeScript / tooling** conventions in the **Nx / Lerna** workspace — proposing small improvements in PRs, not owning org-wide standards alone.
+
+## Kubernetes & GitOps (`config-unified`)
+
+The **GitOps model**, **Helmfile** layout, and overall **platform architecture were already in place**. My role was to **execute migrations and changes I was assigned**: update **Helm** / **values**, align **ConfigMaps** / env vars, work through **SOPS** secrets and promotion steps, and follow runbooks — **not** to invent the system. I **helped migrate** services (including **c2c-fo** and involvement with the **gateway** side) off legacy deploy paths onto the **Kubernetes** setup **as instructed**, and **contributed to** day-to-day deploy-related tasks across namespaces when our rotation needed it.
+
+## Backend & distributed systems
+
+- **Contributed to** features that touch **REST** surfaces in **Java / Spring Boot** and **Next.js** in a large **microservice** environment — enough to debug and integrate, with **backend teammates** owning deeper service design.
+
+## How I work
+
+**Agile** cadence with the squad. I take **ownership of my tickets**, ask when requirements are unclear, and stay in the loop with **PM**, **QA**, and **peers** so releases stay predictable and safe.

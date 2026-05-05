@@ -1,0 +1,96 @@
+---
+title: "neoxs.me"
+description: "Personal platform that grew from a weekend experiment into a Kubernetes-backed microfrontend monorepo — CI/CD, multi-framework apps, and real production lessons."
+tags: ["Next.js", "Nuxt", "Turborepo", "Kubernetes", "Docker"]
+featured: false
+live: "https://neoxs.me"
+github: "https://github.com/neoxs/neoxs-me"
+---
+
+## Why this exists
+
+**neoxs.me** started as a **small weekend project** — something I could tinker with after hours. It didn’t stay small. It turned into the place where I **scaled ideas toward something that feels closer to enterprise reality**: multiple apps, shared libraries, containers, a cluster, TLS, and pipelines that actually ship. That jump came with **real challenges** — things breaking in prod, awkward edge cases, and gaps where I had to stop and learn — and with **huge learning payoff**.
+
+I’m a **curious engineer**. I like trying **new stacks**, and I’m especially drawn to **DevOps and how things run in production**. This repo became the sandbox that matched that curiosity: every layer I added was partly “I want to understand this properly,” not “I already know this cold.”
+
+**Honest framing:** I’m **not** the master of every layer here. I use **AI heavily** for exploration — boilerplate, docs, debugging hints — but the loop is still **mine**: I decide direction, I integrate changes, I hit **real failures** (builds, ingress, certs, flaky tests) and fix them. That mix — assisted speed plus **hands-on ownership** — is how I actually learned **end-to-end** responsibility on a non-trivial codebase.
+
+## What we built (overview)
+
+A **pnpm + Turborepo monorepo** hosting several **independently built and deployable microfrontends**, shared packages, **Docker** images, **GitHub Actions** CI/CD, and a **Helm** chart for **Kubernetes** (path-based routing, TLS with **cert-manager**, GHCR images). Local dev mirrors production topology via **Docker Compose** and **Nginx**.
+
+---
+
+## Apps (`apps/`)
+
+| App | Role |
+|-----|------|
+| **shell** | Main site — **Next.js**, React, portfolio shell and routing entry |
+| **mfe-blog** | Blog — **Nuxt 3**, `@nuxt/content`, Markdown-driven posts |
+| **mfe-lab** | Lab / experiments — **Vite + React** |
+| **mfe-infra** | Internal-style dashboard — **TanStack Router**, Tailwind |
+| **e2e** | **Playwright** suite against the composed stack |
+
+Each MFE has its **own Dockerfile** and can ship on its **own cadence**; CI uses **path filters** so unchanged apps don’t rebuild for no reason.
+
+---
+
+## Shared packages (`packages/`)
+
+- **`@repo/ui`** — Shared **React** UI, **Storybook** for isolation, **Vitest** for component tests.
+- **`@repo/content`** — Typed exports for **blog posts** and **project** writeups (Markdown/MDX under `packages/content`).
+- **`@repo/seo`** — Shared SEO helpers with adapters for **Next.js**, **Nuxt**, and plain React.
+- **`@repo/eslint-config`** — **ESLint flat config** presets reused across apps.
+- **`@repo/tsconfig`** — Shared TypeScript bases.
+
+This is where “design system-ish” discipline meets a portfolio: one source of truth for content and UI conventions.
+
+---
+
+## Local stack & routing
+
+- **`docker-compose.yml`** brings up MFEs behind a **Nginx** reverse proxy — **same path routing idea as prod** (`/` → shell, `/blog` → blog, `/lab` → lab).
+- **`docker/nginx`** — image + config for that gateway behaviour.
+
+Running the full stack locally is how I debug integration issues before they become cluster surprises.
+
+---
+
+## CI/CD (GitHub Actions)
+
+- **Reusable workflows** for **tests** and **Docker builds** (buildx, push to **GHCR**).
+- **Path-based change detection** so only affected images rebuild.
+- **E2E job**: compose up → **Playwright** → tear down (runs on pushes to `main` per the pipeline design).
+- **Manual deploy** workflow: **Helm upgrade** into the cluster (`portfolio` namespace, **staging / production** values).
+
+That structure — reusable pieces, selective builds, explicit deploy — mirrors how I’d want a small platform team to work.
+
+---
+
+## Kubernetes & Helm (`infra/helm/neoxs-me`)
+
+- **One Deployment + Service per MFE**; **Ingress** for host + path rules (**ingress-nginx**), security headers via ConfigMap where configured.
+- **Per-environment values** (`values.yaml`, `values.staging.yaml`, `values.prod.yaml`) — image tags, hosts, TLS.
+- **TLS**: **cert-manager** + **Let’s Encrypt** (`Certificate` resources, ClusterIssuer setup in `infra/k8s/`).
+
+I’m still learning the sharp edges (DNS, cert renewal, ingress quirks), but this is where the project stopped being “Docker only” and became **operations-aware**.
+
+---
+
+## Testing & quality
+
+- **Vitest** for packages and unit-level coverage where it matters.
+- **Storybook** for UI contracts and faster feedback than full-app runs.
+- **Playwright** E2E against the **real composed URLs** — catches routing and integration regressions.
+
+---
+
+## Tooling meta
+
+- **pnpm workspaces**, **Turborepo** pipelines, **TypeScript** everywhere, **Prettier**, shared lint configs, **secretlint** / **husky** discipline so secrets don’t leak in commits.
+
+---
+
+## What I got out of it
+
+**Depth without pretending completeness.** I touched **frontend across frameworks**, **shared libraries**, **containers**, **CI**, **Kubernetes**, and **TLS** — enough to respect how much specialists know in each lane. The goal was never a badge; it was **proof I can own a complex vertical slice**, learn under pressure, and keep improving how **neoxs.me** runs.

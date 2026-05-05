@@ -1,0 +1,33 @@
+---
+title: "LIRMM — microservices migration (internship)"
+description: "Six-month R&D internship: lab + industrial partner — migrating a legacy Spring Cloud app toward Kubernetes (Helm, Kafka, ConfigMaps) with hands-on validation and docs."
+tags: ["Kubernetes", "Kafka", "Spring Boot", "Docker"]
+featured: false
+live: "https://www.lirmm.fr/"
+---
+
+## Project context
+
+**Six-month research internship** at **LIRMM** (University of Montpellier), in **collaboration with an industrial partner** that needed to move off a **legacy Spring Cloud** deployment (**Eureka**, **Config Server**, **API gateway**, **Docker Compose**–centric ops) toward **Kubernetes**. The work was a **joint effort** between the lab and the partner team: define a target architecture, prove it on a lab cluster, and **migrate incrementally** rather than rewrite from scratch.
+
+My contribution was **hands-on implementation and validation** alongside researchers — **Helm** deployments on **Minikube**, trying migration steps, and **documentation** so runs stayed reproducible for both the lab and the partner.
+
+## Kubernetes & runtime
+
+- Deployed and exercised a **distributed stack** (application + **Kafka** + **Zookeeper** + **PostgreSQL**) on **Minikube** using **Helm** charts.
+- Helped move workloads from **Docker Compose** + **Spring Cloud** patterns toward **Kubernetes-native** deployment and networking.
+
+## Messaging
+
+- **Apache Kafka** (**topics**, **consumer groups**, **Kafka Connect**) to **decouple microservices** and replace **tightly coupled synchronous REST** where it made sense for the migration goals.
+
+## Configuration & service discovery
+
+- Shifted configuration from **Spring Cloud Config** toward **ConfigMaps** and **Secrets** on Kubernetes.
+- Reduced reliance on **Spring Cloud Eureka** by using **Kubernetes service discovery** (**CoreDNS**) — aligning with the cloud-native target the project aimed for.
+
+## Deliverables
+
+- **Architecture notes** and internal **documentation**; **presented progress** to the research group (and relevant syncs with the partner context) so decisions and limitations stayed explicit.
+
+This internship was where I first went deep on **Kubernetes** and **distributed systems** in a real migration setting — groundwork that later fed into **DevOps** and **GitOps** work.
