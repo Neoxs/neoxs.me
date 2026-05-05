@@ -39,7 +39,8 @@
   "pnpm": {
     "overrides": {
       "@nuxtjs/mdc": ">=0.17.2",
-      "next": ">=16.2.3"
+      "next": ">=16.2.3",
+      "picomatch@^4": "4.0.4"
     }
   }
 }
