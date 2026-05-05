@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   build: {
     transpile: ['@repo/seo'],
   },
-devtools: { enabled: true },
+  devtools: { enabled: process.env.NODE_ENV !== 'production' },
   devServer: { port: 3002 },
   vite: {
     server: {

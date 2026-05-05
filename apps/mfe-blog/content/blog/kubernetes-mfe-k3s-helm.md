@@ -338,7 +338,7 @@ ingress:
 
 certManager:
   enabled: true
-  email: "y.abdelkaderkharoubi@gmail.com"
+  email: "example@domain.com"
 ```
 
 In CI, the deploy step runs:

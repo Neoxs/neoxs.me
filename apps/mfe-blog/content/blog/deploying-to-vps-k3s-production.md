@@ -35,7 +35,7 @@ flowchart LR
     I1["ghcr.io/neoxs/neoxs-me-shell"]
     I2["ghcr.io/neoxs/neoxs-me-mfe-blog"]
   end
-  subgraph VPS["IONOS VPS 31.70.70.206"]
+  subgraph VPS["IONOS VPS <YOUR_VPS_IP>"]
     K["k3s cluster"]
     NG["ingress-nginx"]
     CM["cert-manager"]
@@ -79,7 +79,7 @@ The disk is mostly irrelevant for this use case — container images are pulled 
 Once the VPS is provisioned you get an IP address and root SSH credentials.
 
 ```bash
-ssh root@31.70.70.206
+ssh root@<YOUR_VPS_IP>
 ```
 
 The first thing to check is which ports are open. IONOS (and most providers) have a **cloud-level firewall** separate from any OS-level firewall. This is a stateless packet filter in the provider's network, before traffic even reaches your server.
@@ -93,7 +93,7 @@ For this setup you need exactly four ports open:
 | 443 | TCP | HTTPS |
 | 6443 | TCP | Kubernetes API server |
 
-Port 6443 is how `kubectl` on your Mac talks to the cluster, and — critically — how GitHub Actions runners talk to it when deploying. This is where the first real mistake happened: I initially restricted port 6443 to my Mac's public IP. That worked fine from my machine but the GitHub Actions deploy step timed out with `dial tcp 31.70.70.206:6443: i/o timeout`. GitHub Actions runners come from a range of shared IP addresses that change on every run. The only viable fix is to allow `0.0.0.0/0` on port 6443. The API server is protected by the kubeconfig certificate, not by IP allowlist.
+Port 6443 is how `kubectl` on your Mac talks to the cluster, and — critically — how GitHub Actions runners talk to it when deploying. This is where the first real mistake happened: I initially restricted port 6443 to my Mac's public IP. That worked fine from my machine but the GitHub Actions deploy step timed out with `dial tcp <YOUR_VPS_IP>:6443: i/o timeout`. GitHub Actions runners come from a range of shared IP addresses that change on every run. The only viable fix is to allow `0.0.0.0/0` on port 6443. The API server is protected by the kubeconfig certificate, not by IP allowlist.
 
 ```
 Symptom:   GitHub Actions deploy step hangs for 5 minutes, then: i/o timeout
@@ -109,7 +109,7 @@ Before installing anything on the server, point DNS at it. cert-manager's ACME H
 
 In GoDaddy (or wherever your domain lives):
 1. Delete any existing A records for `@` (the apex domain)
-2. Add an A record: `@` → `31.70.70.206`, TTL 600
+2. Add an A record: `@` → `<YOUR_VPS_IP>`, TTL 600
 
 That's it. One record. Don't add CNAME or AAAA unless you know you need them.
 
@@ -118,11 +118,11 @@ DNS propagation is often misunderstood. When you check `dig neoxs.me +short` rig
 ```bash
 # Query GoDaddy's authoritative server directly — no cache
 dig neoxs.me +short @ns73.domaincontrol.com
-# → 31.70.70.206  (immediately shows the new IP)
+# → <YOUR_VPS_IP>  (immediately shows the new IP)
 
 # Your local resolver (may still show old IPs for up to TTL seconds)
 dig neoxs.me +short
-# → 31.70.70.206  (once cache expires)
+# → <YOUR_VPS_IP>  (once cache expires)
 ```
 
 Wait for the local resolver to catch up (usually 5–15 minutes with a short TTL) before applying ClusterIssuers.
@@ -133,7 +133,7 @@ Wait for the local resolver to catch up (usually 5–15 minutes with a short TTL
 
 ```bash
 # SSH into the VPS
-ssh root@31.70.70.206
+ssh root@<YOUR_VPS_IP>
 
 # Install k3s with Traefik disabled
 curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--disable=traefik" sh -
@@ -155,11 +155,11 @@ One node, `Ready`. The entire Kubernetes control plane — API server, scheduler
 
 ```bash
 # On your Mac
-scp root@31.70.70.206:/etc/rancher/k3s/k3s.yaml ~/.kube/ionos.yaml
+scp root@<YOUR_VPS_IP>:/etc/rancher/k3s/k3s.yaml ~/.kube/ionos.yaml
 
 # The kubeconfig references 127.0.0.1 (loopback inside the VPS)
 # Replace it with the public IP
-sed -i '' 's/127.0.0.1/31.70.70.206/g' ~/.kube/ionos.yaml
+sed -i '' 's/127.0.0.1/<YOUR_VPS_IP>/g' ~/.kube/ionos.yaml
 
 # Point kubectl at the VPS cluster
 export KUBECONFIG=~/.kube/ionos.yaml
@@ -202,7 +202,7 @@ Verify:
 ```bash
 kubectl get svc -n ingress-nginx
 # NAME                          TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)
-# ingress-nginx-controller      LoadBalancer   10.43.0.23     31.70.70.206    80:31080/TCP,443:31443/TCP
+# ingress-nginx-controller      LoadBalancer   10.43.0.23     <YOUR_VPS_IP>    80:31080/TCP,443:31443/TCP
 ```
 
 The `EXTERNAL-IP` should show your VPS's public IP. If it shows `<pending>`, Traefik is still running and has claimed the port.
@@ -440,7 +440,7 @@ ingress:
 certManager:
   enabled: true
   clusterIssuer: letsencrypt-prod
-  email: "y.abdelkaderkharoubi@gmail.com"
+  email: "example@domain.com"
 ```
 
 ---
@@ -479,7 +479,7 @@ kubectl get pods -n portfolio -w
 # Check ingress got an IP
 kubectl get ingress -n portfolio
 # NAME       CLASS   HOSTS       ADDRESS          PORTS     AGE
-# neoxs-me   nginx   neoxs.me    31.70.70.206     80, 443   30s
+# neoxs-me   nginx   neoxs.me    <YOUR_VPS_IP>     80, 443   30s
 
 # Watch TLS certificate issuance
 kubectl describe certificate neoxs-me-tls -n portfolio
@@ -516,7 +516,7 @@ This is the part that doesn't usually make it into tutorials. All of these were 
 
 ### Bug 1 — Port 6443 blocked for GitHub Actions
 
-**Symptom:** GitHub Actions deploy step runs for exactly 5 minutes then fails with `dial tcp 31.70.70.206:6443: i/o timeout`.
+**Symptom:** GitHub Actions deploy step runs for exactly 5 minutes then fails with `dial tcp <YOUR_VPS_IP>:6443: i/o timeout`.
 
 **Why it happens:** I restricted the Kubernetes API port to my Mac's IP address in the IONOS cloud firewall. The logic seemed sound — only I should be able to reach the API server. But GitHub Actions runners run on shared infrastructure with dynamic IP addresses that change every run. No static IP to allow.
 
@@ -604,7 +604,7 @@ helm get values neoxs-me -n portfolio
 
 ```bash
 dig neoxs.me +short @ns73.domaincontrol.com
-# 31.70.70.206
+# <YOUR_VPS_IP>
 ```
 
 Wait for local TTL to expire. Not a real problem.

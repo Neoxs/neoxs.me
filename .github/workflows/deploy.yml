@@ -6,25 +6,21 @@ on:
       environment:
         description: Target environment
         required: true
-        default: production
+        default: staging
         type: choice
         options: [production, staging]
       shell_tag:
-        description: shell image tag (e.g. sha-abc1234)
-        required: false
-        default: latest
+        description: "shell image tag — use sha-<commit> for production (e.g. sha-abc1234)"
+        required: true
       mfe_blog_tag:
-        description: mfe-blog image tag
-        required: false
-        default: latest
+        description: "mfe-blog image tag — use sha-<commit> for production"
+        required: true
       mfe_lab_tag:
-        description: mfe-lab image tag
-        required: false
-        default: latest
+        description: "mfe-lab image tag — use sha-<commit> for production"
+        required: true
       mfe_infra_tag:
-        description: mfe-infra image tag
-        required: false
-        default: latest
+        description: "mfe-infra image tag — use sha-<commit> for production"
+        required: true
 
 jobs:
   deploy:
@@ -32,6 +28,16 @@ jobs:
     environment: ${{ inputs.environment }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Reject :latest tag on production
+        if: inputs.environment == 'production'
+        run: |
+          for tag in "${{ inputs.shell_tag }}" "${{ inputs.mfe_blog_tag }}" "${{ inputs.mfe_lab_tag }}" "${{ inputs.mfe_infra_tag }}"; do
+            if [ "$tag" = "latest" ]; then
+              echo "::error::':latest' tags are not allowed on production. Use a sha-<commit> tag."
+              exit 1
+            fi
+          done
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v4
@@ -46,6 +52,8 @@ jobs:
           chmod 600 ~/.kube/config
 
       - name: Helm upgrade
+        env:
+          CERT_EMAIL: ${{ secrets.CERT_EMAIL }}
         run: |
           helm upgrade --install neoxs-me ./infra/helm/neoxs-me \
             --namespace portfolio \
@@ -56,5 +64,6 @@ jobs:
             --set mfeBlog.tag=${{ inputs.mfe_blog_tag }} \
             --set mfeLab.tag=${{ inputs.mfe_lab_tag }} \
             --set mfeInfra.tag=${{ inputs.mfe_infra_tag }} \
+            --set certManager.email="${CERT_EMAIL}" \
             --wait \
             --timeout 5m

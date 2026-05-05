@@ -30,6 +30,17 @@ spec:
           ports:
             - containerPort: {{ .Values.mfeInfra.port }}
               protocol: TCP
+
+          # nginx master must run as root to manage worker processes;
+          # workers already run as the `nginx` user via the base image config.
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+              add: [CHOWN, SETUID, SETGID, DAC_OVERRIDE]
+            seccompProfile:
+              type: RuntimeDefault
+
           readinessProbe:
             httpGet:
               path: /healthz

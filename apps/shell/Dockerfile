@@ -27,10 +27,15 @@ FROM node:22-alpine AS runner
 ENV NODE_ENV=production PORT=3000 HOSTNAME=0.0.0.0
 WORKDIR /app
 
+RUN addgroup -S app && adduser -S app -G app
+
 # standalone output is self-contained — no pnpm needed at runtime
 COPY --from=builder /app/apps/shell/.next/standalone ./
 COPY --from=builder /app/apps/shell/.next/static     ./apps/shell/.next/static
 COPY --from=builder /app/apps/shell/public/          ./apps/shell/public/
+
+RUN chown -R app:app /app
+USER app
 
 WORKDIR /app/apps/shell
 EXPOSE 3000

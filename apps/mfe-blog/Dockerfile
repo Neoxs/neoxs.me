@@ -28,7 +28,12 @@ FROM node:22-alpine AS runner
 ENV NODE_ENV=production HOST=0.0.0.0 PORT=3002 NITRO_HOST=0.0.0.0 NITRO_PORT=3002
 WORKDIR /app
 
+RUN addgroup -S app && adduser -S app -G app
+
 COPY --from=builder /app/apps/mfe-blog/.output ./
+
+RUN chown -R app:app /app
+USER app
 
 EXPOSE 3002
 CMD ["node", "server/index.mjs"]

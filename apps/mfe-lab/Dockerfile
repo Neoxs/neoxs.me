@@ -30,5 +30,8 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/apps/mfe-lab/dist /usr/share/nginx/html/lab
 COPY apps/mfe-lab/nginx.conf /etc/nginx/conf.d/mfe-lab.conf
 
+# Ensure static files are owned by the nginx worker user
+RUN chown -R nginx:nginx /usr/share/nginx/html/lab
+
 EXPOSE 3003
 CMD ["nginx", "-g", "daemon off;"]

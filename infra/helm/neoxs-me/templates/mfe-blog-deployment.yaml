@@ -30,6 +30,17 @@ spec:
           ports:
             - containerPort: {{ .Values.mfeBlog.port }}
               protocol: TCP
+
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+            seccompProfile:
+              type: RuntimeDefault
+
           env:
             {{- range $k, $v := .Values.mfeBlog.env }}
             - name: {{ $k }}

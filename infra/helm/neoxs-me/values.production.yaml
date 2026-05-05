@@ -44,4 +44,6 @@ ingress:
 certManager:
   enabled: true
   clusterIssuer: letsencrypt-prod
-  email: "y.abdelkaderkharoubi@gmail.com"
+  # Injected at deploy time: --set certManager.email=$CERT_EMAIL
+  # Store CERT_EMAIL as a GitHub Actions secret, never commit it here.
+  email: ""

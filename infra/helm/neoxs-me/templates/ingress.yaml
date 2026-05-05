@@ -42,6 +42,10 @@ metadata:
     # Disable buffering for SSR streams (Next.js, Nuxt)
     nginx.ingress.kubernetes.io/proxy-buffering: "off"
 
+    # Rate limiting — throttle abusive clients per IP
+    nginx.ingress.kubernetes.io/limit-rps: "20"
+    nginx.ingress.kubernetes.io/limit-connections: "10"
+
     # Security headers via ConfigMap — avoids configuration-snippet which is
     # blocked by the ingress-nginx admission webhook by default.
     # The /lab and /infra redirects are handled by the SPA containers themselves.
@@ -74,6 +78,18 @@ spec:
     - host: {{ .Values.ingress.host | quote }}
       http:
         paths:
+          # ── Block external access to /healthz ────────────────────────────────
+          # Health probes use the internal cluster IP; this path must not be
+          # reachable from the internet. We route it to a non-existent backend
+          # port so ingress-nginx returns 503, preventing information disclosure.
+          - path: /healthz
+            pathType: Exact
+            backend:
+              service:
+                name: shell
+                port:
+                  number: 9999
+
           # ── Nuxt internal assets (highest priority — must come before /blog) ─
           # Vite-generated chunks: /_nuxt/assets/xxx.js
           - path: /_nuxt/

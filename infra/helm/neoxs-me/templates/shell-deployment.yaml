@@ -52,6 +52,16 @@ spec:
             - containerPort: {{ .Values.shell.port }}
               protocol: TCP
 
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+            seccompProfile:
+              type: RuntimeDefault
+
           # Environment variables — same values as docker-compose.yml
           # K8s service names are DNS-resolvable within the namespace
           env:
