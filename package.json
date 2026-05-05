@@ -35,5 +35,11 @@
   "engines": {
     "node": ">=22",
     "pnpm": ">=10"
+  },
+  "pnpm": {
+    "overrides": {
+      "@nuxtjs/mdc": ">=0.17.2",
+      "next": ">=16.2.3"
+    }
   }
 }
