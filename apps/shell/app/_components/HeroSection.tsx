@@ -11,56 +11,60 @@ function heroStats(projectCount: number) {
   ]
 }
 
+/** Mirrors real neoxs.me flows: Turborepo → Compose + Nginx → Helm → cluster */
 const scenes: LiveScene[] = [
   {
-    command: 'pnpm turbo build --filter=shell',
+    command: 'pnpm turbo build',
     lines: [
-      { text: '▸ shell:build  cache miss, executing',  dim: true, hold: 80 },
-      { text: '▸ compiling 324 modules',               dim: true,
-        loading: true, hold: 1400,
-        resolvedText: '✓ compiled  324 modules  3.8s', success: true },
-    ],
-    holdAfter: 1200,
-  },
-  {
-    command: 'docker build -t registry.neoxs.me/mfe-shell:v1.4 .',
-    lines: [
-      { text: '[1/4] FROM node:20-alpine',             dim: true, hold: 90  },
-      { text: '[2/4] RUN pnpm install --frozen-lockfile', dim: true, hold: 100 },
-      { text: '[3/4] RUN pnpm turbo build',            dim: true, hold: 90  },
-      { text: '[4/4] pushing layers',                  dim: true,
-        loading: true, hold: 1600,
-        resolvedText: '✓ pushed  registry.neoxs.me/mfe-shell:v1.4', success: true },
-    ],
-    holdAfter: 1200,
-  },
-  {
-    command: 'kubectl apply -f k8s/ -n portfolio',
-    lines: [
-      { text: 'deployment.apps/mfe-shell      configured', dim: true },
-      { text: 'deployment.apps/mfe-blog       configured', dim: true },
-      { text: 'service/mfe-shell              unchanged',  dim: true },
-      { text: 'ingress/neoxs-ingress          configured', dim: true },
-    ],
-    holdAfter: 1200,
-  },
-  {
-    command: 'kubectl get pods -n portfolio -w',
-    lines: [
-      { text: 'mfe-shell   0/1  ContainerCreating',
-        loading: true, hold: 1100,
-        resolvedText: 'mfe-shell   1/1  Running  ●', success: true },
-      { text: 'mfe-blog    0/1  ContainerCreating',
+      { text: '• Packages in scope: shell, mfe-blog, mfe-lab, mfe-infra',     dim: true, hold: 90 },
+      { text: '• Running build in 4 packages',                                   dim: true, hold: 80 },
+      { text: '▸ shell:build        ████████████████████  DONE',                dim: true, hold: 100 },
+      { text: '▸ mfe-blog:build     ████████████████████  DONE',                dim: true, hold: 100 },
+      { text: '▸ mfe-lab:build      ████████████████████  DONE',                dim: true, hold: 100 },
+      { text: '▸ mfe-infra:build    ████████████████████  DONE',                dim: true, hold: 100 },
+      { text: 'Tasks:    4 successful, 4 total · Cached: 0',                   dim: true,
         loading: true, hold: 900,
-        resolvedText: 'mfe-blog    1/1  Running  ●',  success: true },
-      { text: 'mfe-lab     0/1  ContainerCreating',
-        loading: true, hold: 750,
-        resolvedText: 'mfe-lab     1/1  Running  ●',  success: true },
-      { text: 'mfe-infra   0/1  ContainerCreating',
-        loading: true, hold: 820,
-        resolvedText: 'mfe-infra   1/1  Running  ●',  success: true },
+        resolvedText: 'Tasks:    4 successful, 4 total · Cached: 0', success: true },
     ],
-    holdAfter: 2500,
+    holdAfter: 1100,
+  },
+  {
+    command: 'docker compose up -d --build',
+    lines: [
+      { text: '[+] Building … nginx · shell · blog · lab · infra',           dim: true, hold: 100 },
+      { text: '✔ Container neoxs-nginx-1   Started',                           dim: true, hold: 90 },
+      { text: '✔ Container mfe-shell-1    Healthy',                            dim: true, hold: 90 },
+      { text: '✔ Container mfe-blog-1     Healthy',                            dim: true, hold: 90 },
+      { text: '✔ Container mfe-lab-1      Healthy',                            dim: true,
+        loading: true, hold: 700,
+        resolvedText: '✔ Container mfe-lab-1      Healthy', success: true },
+      { text: '→ http://localhost  (nginx → / · /blog · /lab)',              dim: true, hold: 80 },
+    ],
+    holdAfter: 1200,
+  },
+  {
+    command: 'helm upgrade --install neoxs-me ./infra/helm/neoxs-me -n portfolio --wait',
+    lines: [
+      { text: 'Release "neoxs-me" does not exist. Installing.',               dim: true, hold: 90 },
+      { text: 'STATUS: deployed',                                               dim: true, hold: 80 },
+      { text: 'Deployed apps: shell · mfe-blog · mfe-lab · mfe-infra',       dim: true,
+        loading: true, hold: 1100,
+        resolvedText: 'Deployed apps: shell · mfe-blog · mfe-lab · mfe-infra', success: true },
+      { text: 'Ingress: neoxs.me · TLS cert-manager/Let\'s Encrypt',           dim: true, hold: 90 },
+    ],
+    holdAfter: 1100,
+  },
+  {
+    command: 'kubectl get pods -n portfolio',
+    lines: [
+      { text: 'neoxs-me-shell-7d9f8c6   0/1  PodInitializing',               dim: true,
+        loading: true, hold: 900,
+        resolvedText: 'neoxs-me-shell-7d9f8c6   1/1  Running  ●', success: true },
+      { text: 'neoxs-me-blog-54bc21      1/1  Running  ●',                   dim: true, hold: 70 },
+      { text: 'neoxs-me-lab-c8a901       1/1  Running  ●',                   dim: true, hold: 70 },
+      { text: 'neoxs-me-infra-33f2bb     1/1  Running  ●',                   dim: true, hold: 70 },
+    ],
+    holdAfter: 2400,
   },
 ]
 
