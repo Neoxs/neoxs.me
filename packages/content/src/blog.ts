@@ -12,8 +12,14 @@ export interface Post {
 }
 
 function getBlogDir(): string {
-  // apps/mfe-blog/content/blog is the single source of truth for blog posts
-  return path.resolve(__dirname, '../../../apps/mfe-blog/content/blog')
+  // __dirname is the bundle output dir in Next.js webpack builds, not the source dir.
+  // Try candidates in order; fs.existsSync picks the one that's actually on disk.
+  const candidates = [
+    path.resolve(__dirname, '../../../apps/mfe-blog/content/blog'),         // vitest / ts-node
+    path.join(process.cwd(), '../mfe-blog/content/blog'),                   // Next.js: CWD = apps/shell/
+    path.join(process.cwd(), 'apps/mfe-blog/content/blog'),                 // Next.js: CWD = monorepo root
+  ]
+  return candidates.find(dir => fs.existsSync(dir)) ?? candidates[0]!
 }
 
 export function getAllPosts(dir = getBlogDir()): Post[] {

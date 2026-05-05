@@ -72,7 +72,7 @@ export function HeroSection() {
       borderBottom:   '0.5px solid var(--color-border)',
       position:       'relative',
     }}>
-      <div className="container" style={{ paddingTop: 'var(--space-64)', paddingBottom: 'var(--space-64)' }}>
+      <div className="container hero-padding">
 
         <HeroHeading
           line1="Building interfaces"
@@ -83,13 +83,7 @@ export function HeroSection() {
         />
 
         {/* Stats row */}
-        <div style={{
-          display:    'flex',
-          gap:        'var(--space-32)',
-          marginTop:  'var(--space-48)',
-          paddingTop: 'var(--space-32)',
-          borderTop:  '0.5px solid var(--color-border)',
-        }}>
+        <div className="hero-stats">
           {stats.map(s => (
             <div key={s.label}>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-22)', color: 'var(--color-teal)', fontWeight: 500, lineHeight: 1 }}>

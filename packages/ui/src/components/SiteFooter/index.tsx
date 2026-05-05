@@ -10,7 +10,7 @@ const NAV_LINKS = [
 
 const SOCIALS = [
   { label: 'github',   href: 'https://github.com/neoxs'                          },
-  { label: 'linkedin', href: 'https://linkedin.com/in/yacine-abdelkader-kharoubi'},
+  { label: 'linkedin', href: 'https://linkedin.com/in/yacinekharo'},
   { label: 'email',    href: 'mailto:y.abdelkaderkharoubi@gmail.com'              },
 ]
 
