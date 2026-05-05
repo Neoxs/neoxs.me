@@ -249,7 +249,7 @@ Second, we added a Trivy scan to the Docker build workflow, which runs after the
 
 ```yaml
 - name: Scan image for vulnerabilities (Trivy)
-  uses: aquasecurity/trivy-action@0.30.0
+  uses: aquasecurity/trivy-action@0.36.0
   with:
     image-ref: ${{ inputs.image }}:sha-${{ github.sha }}
     format: table
