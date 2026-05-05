@@ -3,11 +3,13 @@ import { LiveTerminal } from '@repo/ui/live-terminal'
 import { Lighthouse }   from '@repo/ui/lighthouse'
 import type { LiveScene } from '@repo/ui/live-terminal'
 
-const stats = [
-  { value: '05', label: 'years exp'        },
-  { value: '12', label: 'projects shipped' },
-  { value: '03', label: 'MFE systems'      },
-]
+function heroStats(projectCount: number) {
+  return [
+    { value: '03', label: 'years exp' },
+    { value: String(projectCount).padStart(2, '0'), label: 'projects' },
+    { value: '04', label: 'MFE apps here' },
+  ]
+}
 
 const scenes: LiveScene[] = [
   {
@@ -62,7 +64,14 @@ const scenes: LiveScene[] = [
   },
 ]
 
-export function HeroSection() {
+interface HeroSectionProps {
+  /** Total project entries (from content); keeps the stat in sync with /projects */
+  projectCount: number
+}
+
+export function HeroSection({ projectCount }: HeroSectionProps) {
+  const stats = heroStats(projectCount)
+
   return (
     <section style={{
       minHeight:      'calc(100dvh - 52px)',
@@ -75,11 +84,12 @@ export function HeroSection() {
       <div className="container hero-padding">
 
         <HeroHeading
-          line1="Building interfaces"
-          line2="that"
-          accent="scale."
-          sub="React · Vue · Next.js · Module Federation · Kubernetes · Turborepo"
-          openToWork
+          eyebrow="// SOFTWARE ENGINEER · PARIS"
+          line1="Frontend-first engineer"
+          line2="shipping end-to-end —"
+          accent="UI to cluster."
+          sub="React · Next.js · Vue · TypeScript · Kubernetes · CI/CD. Based in Paris; frontend-focused at Rakuten France. I ship with PM, QA, and engineers across the stack — and I geek out on DevOps on this site (microfrontends on Kubernetes)."
+          openToWork={false}
         />
 
         {/* Stats row */}

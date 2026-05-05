@@ -4,7 +4,8 @@ export const siteConfig: SiteConfig = {
   name:        'neoxs.me',
   url:         'https://neoxs.me',
   author:      'Yacine Kharoubi',
-  description: 'Frontend engineer specialising in microfrontend architecture, performance, and DevOps. Based in Paris.',
+  description:
+    'Yacine Kharoubi — software engineer in Paris (Rakuten France). Frontend-first: React, Next.js, Vue. CI/CD, Kubernetes, Docker. Portfolio & blog at neoxs.me — a microfrontend monorepo I grow end-to-end.',
   ogImage:     '/opengraph-image.jpg',
   favicon:     '/favicon.ico',
 }

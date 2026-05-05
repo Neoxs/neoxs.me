@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <main>
-      <HeroSection />
+      <HeroSection projectCount={projects.length} />
       <ProjectsSection projects={projects} />
       <StackSection />
     </main>

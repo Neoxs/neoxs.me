@@ -24,10 +24,33 @@ function getProjectsDir(): string {
   return candidates.find(dir => fs.existsSync(dir)) ?? candidates[0]!
 }
 
+/** Shell home: 1 featured row + 3 compact — pin this quartet first, then the rest. */
+const SHELL_HOME_PROJECT_ORDER = [
+  'rakuten-france',
+  'alwasaet-scholarship-management',
+  'lasting-dynamics-insurance',
+  'neoxs-me',
+] as const
+
+function shellHomeOrderRank(slug: string): number {
+  const i = SHELL_HOME_PROJECT_ORDER.indexOf(slug as (typeof SHELL_HOME_PROJECT_ORDER)[number])
+  return i === -1 ? SHELL_HOME_PROJECT_ORDER.length : i
+}
+
+function sortProjects(projects: Project[]): Project[] {
+  return [...projects].sort((a, b) => {
+    const ra = shellHomeOrderRank(a.slug)
+    const rb = shellHomeOrderRank(b.slug)
+    if (ra !== rb) return ra - rb
+    if (a.featured !== b.featured) return (b.featured ? 1 : 0) - (a.featured ? 1 : 0)
+    return a.slug.localeCompare(b.slug)
+  })
+}
+
 export function getAllProjects(dir = getProjectsDir()): Project[] {
   if (!fs.existsSync(dir)) return []
 
-  return fs
+  const projects = fs
     .readdirSync(dir)
     .filter((f: string) => f.endsWith('.md') || f.endsWith('.mdx'))
     .map((filename: string) => {
@@ -42,7 +65,8 @@ export function getAllProjects(dir = getProjectsDir()): Project[] {
         tags:     (data as Partial<Project>).tags     ?? [],
       }
     })
-    .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0))
+
+  return sortProjects(projects)
 }
 
 export function getProjectBySlug(slug: string, dir?: string): Project | undefined {

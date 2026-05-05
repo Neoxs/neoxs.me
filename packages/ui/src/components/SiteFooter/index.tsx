@@ -17,7 +17,7 @@ const SOCIALS = [
 export function SiteFooter() {
   return (
     <Footer
-      tagline="Frontend engineer specialising in microfrontend architecture, performance, and DevOps. Based in Paris."
+      tagline="Software engineer in Paris (Rakuten France). Frontend-first — React, Next.js, Vue — with CI/CD & Kubernetes. neoxs.me started as a weekend experiment and turned into my hands-on microfrontend + ops lab."
       nav={NAV_LINKS}
       socials={SOCIALS}
       copyright={`© ${new Date().getFullYear()} Yacine Kharoubi`}

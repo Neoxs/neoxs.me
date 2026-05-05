@@ -44,7 +44,7 @@ export function Footer({ tagline, nav = [], socials = [], copyright }: FooterPro
               fontSize:    'var(--text-11)',
               color:       'var(--color-text-2)',
               lineHeight:  1.6,
-              maxWidth:    '220px',
+              maxWidth:    'min(320px, 100%)',
               letterSpacing: '0.02em',
             }}>
               {tagline}
