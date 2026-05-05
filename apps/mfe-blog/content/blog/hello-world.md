@@ -1,6 +1,6 @@
 ---
 title: 'Hello, World!'
-date: '2025-04-01'
+date: '2024-04-01'
 description: "Welcome to my blog — a space for thoughts on frontend engineering, distributed systems, and DevOps."
 tags: ["meta", "intro"]
 readingTime: 3

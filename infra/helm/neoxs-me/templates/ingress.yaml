@@ -13,6 +13,7 @@
 #   upstream mfe_infra_upstream → Service "mfe-infra"
 #   location /_nuxt/            → path /_nuxt/ → mfe-blog
 #   location /api/_content/     → path /api/_content/ → mfe-blog
+#   location /blog-assets/      → path /blog-assets/ → mfe-blog (Nuxt public/blog-assets/)
 #   location /_next/            → path /_next/ → shell
 #   location /blog              → path /blog → mfe-blog
 #   location /lab/              → path /lab/ → mfe-lab
@@ -102,6 +103,15 @@ spec:
 
           # Nuxt Content API: /api/_content/query/...
           - path: /api/_content/
+            pathType: Prefix
+            backend:
+              service:
+                name: mfe-blog
+                port:
+                  number: {{ .Values.mfeBlog.port }}
+
+          # Blog static assets (Nuxt public/blog-assets/) — keeps /images/ for the shell
+          - path: /blog-assets/
             pathType: Prefix
             backend:
               service:

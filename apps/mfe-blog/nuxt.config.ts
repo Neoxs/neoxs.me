@@ -25,7 +25,7 @@ export default defineNuxtConfig({
   content: {
     highlight: {
       theme: 'github-dark',
-      langs: ['ts', 'js', 'tsx', 'vue', 'bash', 'yaml', 'go', 'java', 'json', 'css'],
+      langs: ['ts', 'js', 'jsx', 'tsx', 'vue', 'bash', 'yaml', 'go', 'java', 'json', 'css', 'nginx'],
     },
     markdown: {
       toc: {

@@ -17,6 +17,8 @@ const nextConfig: NextConfig = {
       beforeFiles: [
         { source: '/_nuxt/:path*',         destination: `${BLOG}/_nuxt/:path*`         },
         { source: '/api/_content/:path*',  destination: `${BLOG}/api/_content/:path*`  },
+        // Blog MFE public/blog-assets/ — namespaced so shell can use /images/ etc.
+        { source: '/blog-assets/:path*',  destination: `${BLOG}/blog-assets/:path*`    },
       ],
       afterFiles: [
         { source: '/blog',         destination: `${BLOG}/blog/`         },
