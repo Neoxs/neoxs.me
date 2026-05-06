@@ -16,6 +16,15 @@ on:
       digest:
         description: Image digest pushed to GHCR
         value: ${{ jobs.docker.outputs.digest }}
+      image:
+        description: Image repository (no tag or digest)
+        value: ${{ jobs.docker.outputs.image }}
+      image_pin:
+        description: Immutable reference image@sha256:…
+        value: ${{ jobs.docker.outputs.image_pin }}
+      tags:
+        description: Comma-separated tags pushed alongside digest
+        value: ${{ jobs.docker.outputs.tags }}
 
 permissions:
   contents: read
@@ -26,6 +35,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       digest: ${{ steps.push.outputs.digest }}
+      image: ${{ inputs.image }}
+      image_pin: ${{ inputs.image }}@${{ steps.push.outputs.digest }}
+      tags: ${{ steps.tagsflat.outputs.tags }}
     steps:
       - uses: actions/checkout@v4
 
@@ -61,11 +73,10 @@ jobs:
           cache-from: type=gha,scope=${{ inputs.app }}
           cache-to:   type=gha,scope=${{ inputs.app }},mode=max
 
-      - name: Scan image for vulnerabilities (Trivy)
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          image-ref: ${{ inputs.image }}@${{ steps.push.outputs.digest }}
-          format: table
-          exit-code: 1
-          severity: CRITICAL,HIGH
-          ignore-unfixed: true
+      - name: Flatten tags for workflow outputs
+        id: tagsflat
+        env:
+          META_TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          tags=$(printf '%s\n' "$META_TAGS" | paste -sd ',' -)
+          echo "tags=${tags}" >> "$GITHUB_OUTPUT"

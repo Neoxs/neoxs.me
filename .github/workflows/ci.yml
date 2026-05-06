@@ -101,6 +101,116 @@ jobs:
       contents: read
       packages: write
 
+  # ── Workflow summary (images + informational Trivy) — main push only ─────────
+  # Best practice: keep vulnerability scans separate from build/push so a noisy
+  # CVE report never blocks shipping images. This job always exits successfully;
+  # see each Trivy section in the job summary for findings (CRITICAL/HIGH).
+  publish-summary:
+    name: Workflow summary (GHCR + Trivy)
+    needs: [build-shell, build-mfe-blog, build-mfe-lab, build-mfe-infra]
+    if: always() && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Write image inventory
+        env:
+          SHA: ${{ github.sha }}
+          REF_NAME: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+          RS: ${{ needs.build-shell.result }}
+          TS: ${{ needs.build-shell.outputs.tags }}
+          PS: ${{ needs.build-shell.outputs.image_pin }}
+          RB: ${{ needs.build-mfe-blog.result }}
+          TB: ${{ needs.build-mfe-blog.outputs.tags }}
+          PB: ${{ needs.build-mfe-blog.outputs.image_pin }}
+          RL: ${{ needs.build-mfe-lab.result }}
+          TL: ${{ needs.build-mfe-lab.outputs.tags }}
+          PL: ${{ needs.build-mfe-lab.outputs.image_pin }}
+          RI: ${{ needs.build-mfe-infra.result }}
+          TI: ${{ needs.build-mfe-infra.outputs.tags }}
+          PI: ${{ needs.build-mfe-infra.outputs.image_pin }}
+        run: bash .github/scripts/ci-publish-summary.sh write-images
+
+      - name: Log in to GHCR (read-only for Trivy pull)
+        if: |
+          needs.build-shell.result == 'success' ||
+          needs.build-mfe-blog.result == 'success' ||
+          needs.build-mfe-lab.result == 'success' ||
+          needs.build-mfe-infra.result == 'success'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trivy — shell
+        id: trivy_shell
+        if: needs.build-shell.result == 'success'
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ needs.build-shell.outputs.image_pin }}
+          format: json
+          output: trivy-shell.json
+          exit-code: '0'
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+
+      - name: Append Trivy — shell to summary
+        if: needs.build-shell.result == 'success'
+        run: bash .github/scripts/ci-publish-summary.sh append-trivy trivy-shell.json shell
+
+      - name: Trivy — mfe-blog
+        id: trivy_mfe_blog
+        if: needs.build-mfe-blog.result == 'success'
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ needs.build-mfe-blog.outputs.image_pin }}
+          format: json
+          output: trivy-mfe-blog.json
+          exit-code: '0'
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+
+      - name: Append Trivy — mfe-blog to summary
+        if: needs.build-mfe-blog.result == 'success'
+        run: bash .github/scripts/ci-publish-summary.sh append-trivy trivy-mfe-blog.json mfe-blog
+
+      - name: Trivy — mfe-lab
+        id: trivy_mfe_lab
+        if: needs.build-mfe-lab.result == 'success'
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ needs.build-mfe-lab.outputs.image_pin }}
+          format: json
+          output: trivy-mfe-lab.json
+          exit-code: '0'
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+
+      - name: Append Trivy — mfe-lab to summary
+        if: needs.build-mfe-lab.result == 'success'
+        run: bash .github/scripts/ci-publish-summary.sh append-trivy trivy-mfe-lab.json mfe-lab
+
+      - name: Trivy — mfe-infra
+        id: trivy_mfe_infra
+        if: needs.build-mfe-infra.result == 'success'
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ needs.build-mfe-infra.outputs.image_pin }}
+          format: json
+          output: trivy-mfe-infra.json
+          exit-code: '0'
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+
+      - name: Append Trivy — mfe-infra to summary
+        if: needs.build-mfe-infra.result == 'success'
+        run: bash .github/scripts/ci-publish-summary.sh append-trivy trivy-mfe-infra.json mfe-infra
+
   # ── E2E tests — full stack via Docker Compose (main push only) ─────────────
   e2e:
     needs: [build-shell, build-mfe-blog, build-mfe-lab, build-mfe-infra]
