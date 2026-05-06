@@ -15,6 +15,7 @@
     "./console-output": "./src/components/ConsoleOutput/index.tsx",
     "./editor-toolbar": "./src/components/EditorToolbar/index.tsx",
     "./footer": "./src/components/Footer/index.tsx",
+    "./footer/constants": "./src/components/Footer/constants.ts",
     "./site-footer": "./src/components/SiteFooter/index.tsx",
     "./site-navbar": "./src/components/SiteNavbar/index.tsx",
     "./hero-heading": "./src/components/HeroHeading/index.tsx",

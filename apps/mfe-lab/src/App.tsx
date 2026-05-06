@@ -17,7 +17,7 @@ export default function App() {
         title="Component Lab"
         description="Interactive sandbox for the neoxs.me design system components."
       />
-      <SiteFooter />
+      <SiteFooter builtWith="React · Vite" />
     </>
   )
 }

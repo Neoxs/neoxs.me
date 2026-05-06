@@ -1,1 +1,6 @@
-export { SiteFooter as ShellFooter } from '@repo/ui/site-footer'
+import type { SiteFooterProps } from '@repo/ui/site-footer'
+import { SiteFooter } from '@repo/ui/site-footer'
+
+export function ShellFooter(props: SiteFooterProps) {
+  return <SiteFooter {...props} />
+}

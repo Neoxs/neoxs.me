@@ -189,7 +189,7 @@ html {
   .blog-navbar__menu-btn { display: flex; }
 }
 
-/* BlogFooter */
+/* BlogFooter — mirrors packages/ui/src/components/Footer/index.css */
 .blog-footer {
   border-top: 1px solid var(--color-teal);
   background: var(--color-bg);
@@ -201,7 +201,12 @@ html {
   align-items: flex-start;
   gap: var(--space-40);
   padding: var(--space-40);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+}
+
+.blog-footer__brand {
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .blog-footer__brand-name {
@@ -218,8 +223,8 @@ html {
   font-size: var(--text-11);
   color: var(--color-text-2);
   line-height: 1.6;
-  max-width: 220px;
   letter-spacing: 0.02em;
+  max-width: clamp(180px, 25vw, 260px);
 }
 
 .blog-footer__links-col {
@@ -227,13 +232,14 @@ html {
   flex-direction: column;
   gap: var(--space-24);
   align-items: flex-end;
+  flex-shrink: 0;
 }
 
 .blog-footer__nav-links {
   display: flex;
-  gap: var(--space-24);
   flex-wrap: wrap;
   justify-content: flex-end;
+  gap: var(--space-24);
 }
 
 .blog-footer__nav-link {
@@ -242,16 +248,18 @@ html {
   color: var(--color-text-2);
   text-decoration: none;
   letter-spacing: 0.04em;
-  transition: color 0.15s;
+  transition: color 0.15s ease;
 }
 
-.blog-footer__nav-link:hover { color: var(--color-teal); }
+.blog-footer__nav-link:hover {
+  color: var(--color-teal);
+}
 
 .blog-footer__social-links {
   display: flex;
-  gap: var(--space-20);
   flex-wrap: wrap;
   justify-content: flex-end;
+  gap: var(--space-20);
 }
 
 .blog-footer__social-link {
@@ -260,21 +268,47 @@ html {
   color: var(--color-text-3);
   text-decoration: none;
   letter-spacing: 0.04em;
-  transition: color 0.15s;
+  transition: color 0.15s ease;
 }
 
-.blog-footer__social-link:hover { color: var(--color-teal); }
+.blog-footer__social-link:hover {
+  color: var(--color-teal);
+}
 
 .blog-footer__bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: var(--space-12);
   padding: var(--space-16) var(--space-40);
   border-top: 0.5px solid var(--color-border);
   flex-wrap: wrap;
-  gap: var(--space-12);
+}
+
+.blog-footer__bottom-text {
   font-family: var(--font-mono);
   font-size: var(--text-9);
   color: var(--color-text-3);
   letter-spacing: 0.04em;
+}
+
+@media (max-width: 768px) {
+  .blog-footer__main {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .blog-footer__links-col {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .blog-footer__nav-links,
+  .blog-footer__social-links {
+    justify-content: flex-start;
+  }
+
+  .blog-footer__tagline {
+    max-width: 100%;
+  }
 }

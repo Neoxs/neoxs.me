@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { FOOTER_DEPLOY_NOTE } from '@repo/ui/footer/constants'
+
 const year = new Date().getFullYear()
+const builtWith = 'Nuxt 3'
+const deployedOn = FOOTER_DEPLOY_NOTE
 
 const navLinks = [
   { label: 'work',     href: '/#work'    },
@@ -22,8 +26,7 @@ const socials = [
       <div class="blog-footer__brand">
         <div class="blog-footer__brand-name">neoxs.me</div>
         <p class="blog-footer__tagline">
-          Frontend engineer specialising in microfrontend architecture,
-          performance, and DevOps. Based in Paris.
+          Software engineer at Rakuten France. Frontend-focused exploring DevOps, Kubernetes, CI/CD, and scalable microfrontend systems through neoxs.me.
         </p>
       </div>
 
@@ -49,8 +52,8 @@ const socials = [
     </div>
 
     <div class="blog-footer__bottom">
-      <span>© {{ year }} Yacine Kharoubi</span>
-      <span>built with Nuxt 3 · deployed on Kubernetes</span>
+      <span class="blog-footer__bottom-text">© {{ year }} Yacine Kharoubi</span>
+      <span class="blog-footer__bottom-text">built with {{ builtWith }} · {{ deployedOn }}</span>
     </div>
   </footer>
 </template>

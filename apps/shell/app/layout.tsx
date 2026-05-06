@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ShellNavbar />
         {children}
-        <ShellFooter />
+        <ShellFooter builtWith="Next.js" />
       </body>
     </html>
   )

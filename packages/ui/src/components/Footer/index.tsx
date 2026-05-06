@@ -1,74 +1,60 @@
 'use client'
 
-interface FooterLink { label: string; href: string }
+import './index.css'
 
-interface FooterProps {
-  tagline?:   string
-  nav?:       FooterLink[]
-  socials?:   FooterLink[]
-  copyright?: string
+import { FOOTER_DEPLOY_NOTE } from './constants'
+
+export { FOOTER_DEPLOY_NOTE } from './constants'
+
+interface FooterLink {
+  label: string
+  href: string
 }
 
-export function Footer({ tagline, nav = [], socials = [], copyright }: FooterProps) {
+interface FooterProps {
+  tagline?: string
+  nav?: FooterLink[]
+  socials?: FooterLink[]
+  copyright?: string
+  /** Stack or framework for this app, e.g. "Next.js", "Nuxt 3", "React · Vite". */
+  builtWith: string
+  /** Deploy/runtime note; defaults to k3s + Kubernetes context. */
+  deployedOn?: string
+}
+
+export function Footer({
+  tagline,
+  nav = [],
+  socials = [],
+  copyright,
+  builtWith,
+  deployedOn = FOOTER_DEPLOY_NOTE,
+}: FooterProps) {
   return (
-    <footer style={{
-      borderTop:  '1px solid var(--color-teal)',
-      background: 'var(--color-bg)',
-    }}>
-
+    <footer className="footer">
       {/* Main row */}
-      <div style={{
-        display:        'flex',
-        justifyContent: 'space-between',
-        alignItems:     'flex-start',
-        gap:            'var(--space-40)',
-        padding:        'var(--space-40)',
-        flexWrap:       'wrap',
-      }}>
-
+      <div className="footer-main">
         {/* Brand */}
-        <div>
-          <div style={{
-            fontFamily:    'var(--font-mono)',
-            fontSize:      'var(--text-13)',
-            color:         'var(--color-teal)',
-            fontWeight:    500,
-            letterSpacing: '0.06em',
-            marginBottom:  'var(--space-8)',
-          }}>
-            neoxs.me
-          </div>
+        <div className="footer-brand">
+          <div className="footer-logo">neoxs.me</div>
+
           {tagline && (
-            <p style={{
-              fontFamily:  'var(--font-mono)',
-              fontSize:    'var(--text-11)',
-              color:       'var(--color-text-2)',
-              lineHeight:  1.6,
-              maxWidth:    'min(320px, 100%)',
-              letterSpacing: '0.02em',
-            }}>
+            <p className="footer-tagline">
               {tagline}
             </p>
           )}
         </div>
 
         {/* Links */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-24)', alignItems: 'flex-end' }}>
-
+        <div className="footer-links">
           {/* Nav links */}
           {nav.length > 0 && (
-            <div style={{ display: 'flex', gap: 'var(--space-24)', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-              {nav.map(link => (
-                <a key={link.label} href={link.href} style={{
-                  fontFamily:    'var(--font-mono)',
-                  fontSize:      'var(--text-11)',
-                  color:         'var(--color-text-2)',
-                  textDecoration:'none',
-                  letterSpacing: '0.04em',
-                  transition:    'color 0.15s',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-teal)')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-2)')}
+            <div className="footer-nav">
+              {nav.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="footer-link footer-link-nav"
                 >
                   {link.label}
                 </a>
@@ -78,46 +64,33 @@ export function Footer({ tagline, nav = [], socials = [], copyright }: FooterPro
 
           {/* Social links */}
           {socials.length > 0 && (
-            <div style={{ display: 'flex', gap: 'var(--space-20)', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-              {socials.map(link => (
-                <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" style={{
-                  fontFamily:    'var(--font-mono)',
-                  fontSize:      'var(--text-11)',
-                  color:         'var(--color-text-3)',
-                  textDecoration:'none',
-                  letterSpacing: '0.04em',
-                  transition:    'color 0.15s',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-teal)')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text-3)')}
+            <div className="footer-socials">
+              {socials.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-link footer-link-social"
                 >
                   {link.label} ↗
                 </a>
               ))}
             </div>
           )}
-
         </div>
       </div>
 
       {/* Bottom bar */}
-      <div style={{
-        display:        'flex',
-        justifyContent: 'space-between',
-        alignItems:     'center',
-        padding:        'var(--space-16) var(--space-40)',
-        borderTop:      '0.5px solid var(--color-border)',
-        flexWrap:       'wrap',
-        gap:            'var(--space-12)',
-      }}>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-9)', color: 'var(--color-text-3)', letterSpacing: '0.04em' }}>
+      <div className="footer-bottom">
+        <span className="footer-bottom-text">
           {copyright}
         </span>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--text-9)', color: 'var(--color-text-3)', letterSpacing: '0.04em' }}>
-          built with Next.js · deployed on Kubernetes
+
+        <span className="footer-bottom-text">
+          built with {builtWith} · {deployedOn}
         </span>
       </div>
-
     </footer>
   )
 }

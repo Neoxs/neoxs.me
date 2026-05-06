@@ -14,13 +14,22 @@ const SOCIALS = [
   { label: 'email',    href: 'mailto:y.abdelkaderkharoubi@gmail.com'              },
 ]
 
-export function SiteFooter() {
+export interface SiteFooterProps {
+  /** Stack for this microfrontend, e.g. Next.js, Nuxt 3, React · TanStack Router. */
+  builtWith: string
+  /** Optional override for the deploy/runtime segment (defaults to k3s + Kubernetes). */
+  deployedOn?: string
+}
+
+export function SiteFooter({ builtWith, deployedOn }: SiteFooterProps) {
   return (
     <Footer
-      tagline="Software engineer in Paris (Rakuten France). Frontend-first — React, Next.js, Vue — with CI/CD & Kubernetes. neoxs.me started as a weekend experiment and turned into my hands-on microfrontend + ops lab."
+      tagline="Software engineer at Rakuten France. Frontend-focused exploring DevOps, Kubernetes, CI/CD, and scalable microfrontend systems through neoxs.me."
       nav={NAV_LINKS}
       socials={SOCIALS}
       copyright={`© ${new Date().getFullYear()} Yacine Kharoubi`}
+      builtWith={builtWith}
+      deployedOn={deployedOn}
     />
   )
 }
