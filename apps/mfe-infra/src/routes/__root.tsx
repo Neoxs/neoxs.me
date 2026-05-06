@@ -4,6 +4,8 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import { SiteNavbar } from '@repo/ui/site-navbar'
 import { SiteFooter } from '@repo/ui/site-footer'
 
+import '../styles.css'
+
 export const Route = createRootRoute({
   component: RootComponent,
   notFoundComponent: () => (
@@ -16,7 +18,7 @@ function RootComponent() {
     <>
       <SiteNavbar />
       <Outlet />
-      <SiteFooter builtWith="React · TanStack Router" />
+      <SiteFooter builtWith="React · TanStack" />
       <TanStackDevtools
         config={{
           position: 'bottom-right',
